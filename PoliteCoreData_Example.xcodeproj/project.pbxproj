@@ -12,8 +12,24 @@
 		1741923C2886B70A00161123 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1741923A2886B70A00161123 /* Main.storyboard */; };
 		1741923E2886B70C00161123 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1741923D2886B70C00161123 /* Assets.xcassets */; };
 		174192412886B70C00161123 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1741923F2886B70C00161123 /* LaunchScreen.storyboard */; };
+		174192812886C8FD00161123 /* PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; };
+		174192822886C8FD00161123 /* PoliteCoreData_Framework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CEEB17D79178F98078DA2BF2 /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		174192832886C8FD00161123 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				174192822886C8FD00161123 /* PoliteCoreData_Framework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		174192312886B70A00161123 /* PoliteCoreData_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoliteCoreData_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -23,6 +39,7 @@
 		1741923D2886B70C00161123 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		174192402886B70C00161123 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		174192422886B70C00161123 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB465880E9AD98AC5589C15 /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B38D68B831D69EE1DCE1D96E /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -34,6 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEEB17D79178F98078DA2BF2 /* Pods_PoliteCoreData_Example.framework in Frameworks */,
+				174192812886C8FD00161123 /* PoliteCoreData_Framework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +92,7 @@
 		B35F5C6CC23DE2C468394B27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */,
 				FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */,
 			);
 			name = Frameworks;
@@ -100,6 +119,7 @@
 				1741922D2886B70A00161123 /* Sources */,
 				1741922E2886B70A00161123 /* Frameworks */,
 				1741922F2886B70A00161123 /* Resources */,
+				174192832886C8FD00161123 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
