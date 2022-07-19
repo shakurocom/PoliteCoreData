@@ -15,6 +15,7 @@
 		174192542886B86400161123 /* SingleObjectFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */; };
 		174192552886B86400161123 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924E2886B86400161123 /* FetchedResultsController.swift */; };
 		174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924F2886B86400161123 /* PoliteCoreStorage.swift */; };
+		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
 		AEF262BE9843D490169DE1C1 /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A0FAA5CCFBEBACE80B5468 /* Pods_PoliteCoreData_Framework.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		1741924F2886B86400161123 /* PoliteCoreStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoliteCoreStorage.swift; sourceTree = "<group>"; };
 		174192572886B9FF00161123 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		174192582886B9FF00161123 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = Shakuro.PoliteCoreData.podspec; sourceTree = "<group>"; };
 		1CF27C4824D369BF5DDB4539 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
 		A9A0FAA5CCFBEBACE80B5468 /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C96EF585958B8B4077DB161E /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				174192572886B9FF00161123 /* LICENSE.md */,
 				174192582886B9FF00161123 /* README.md */,
+				1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */,
 				1741921D2886AD2A00161123 /* PoliteCoreData_Framework */,
 				174192482886B86400161123 /* Source */,
 				1741921C2886AD2A00161123 /* Products */,
@@ -179,6 +182,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
