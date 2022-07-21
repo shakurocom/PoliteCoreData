@@ -11,4 +11,5 @@ Pod::Spec.new do |s|
     s.source_files     = 'Source/*'
     s.ios.deployment_target = '11.0'
 
+    s.dependency "Shakuro.CommonTypes", "1.1.2"
 end

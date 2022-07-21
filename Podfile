@@ -8,6 +8,7 @@ workspace 'PoliteCoreData'
 
 target 'PoliteCoreData_Framework' do
     project 'PoliteCoreData_Framework.xcodeproj'
+    pod 'Shakuro.CommonTypes', '1.1.2'
 end
 
 target 'PoliteCoreData_Example' do
