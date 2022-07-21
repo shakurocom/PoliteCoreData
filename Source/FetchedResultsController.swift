@@ -106,6 +106,13 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     }
 
     ///
+    /// - Parameter index: An index of requested section
+    /// - Returns: Name of the section
+    public func sectionName(_ index: Int) -> String? {
+        return fetchedResultsController.sections?[index].name
+    }
+
+    ///
     /// - Returns: Number of sections
     public func numberOfSections() -> Int {
         return fetchedResultsController.sections?.count ?? 0
