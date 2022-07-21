@@ -14,6 +14,7 @@
 		174192412886B70C00161123 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1741923F2886B70C00161123 /* LaunchScreen.storyboard */; };
 		174192812886C8FD00161123 /* PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; };
 		174192822886C8FD00161123 /* PoliteCoreData_Framework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */; };
 		CEEB17D79178F98078DA2BF2 /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		174192402886B70C00161123 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		174192422886B70C00161123 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		17B679CB2889642F007ED061 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		6DB465880E9AD98AC5589C15 /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B38D68B831D69EE1DCE1D96E /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +87,7 @@
 				1741923D2886B70C00161123 /* Assets.xcassets */,
 				1741923F2886B70C00161123 /* LaunchScreen.storyboard */,
 				174192422886B70C00161123 /* Info.plist */,
+				17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */,
 			);
 			path = PoliteCoreData_Example;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */,
 				174192392886B70A00161123 /* ViewController.swift in Sources */,
 				174192352886B70A00161123 /* AppDelegate.swift in Sources */,
 			);
@@ -447,6 +451,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				17B679CB2889642F007ED061 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 17B679CB2889642F007ED061 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 174192292886B70A00161123 /* Project object */;
 }
