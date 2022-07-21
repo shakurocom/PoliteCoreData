@@ -3,9 +3,8 @@
 //
 //
 
-import Foundation
-import UIKit
 import CoreData
+import Foundation
 
 /// Wrapper on NSFetchedResultsController, provides easy way to observe single entity.
 /// See: [FetchedResultsController](x-source-tag://FetchedResultsController) for more info

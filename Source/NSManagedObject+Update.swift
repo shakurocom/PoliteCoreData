@@ -3,8 +3,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public extension NSManagedObject {
 
@@ -17,6 +17,7 @@ public extension NSManagedObject {
     ///   - value: A value to apply
     /// - Returns: Bool value, indicating if value applied or there is no changes
      /// - Tag: applyValueOptional
+    @discardableResult
     static func applyValue<Value: Equatable, Root>(to root: Root, path: ReferenceWritableKeyPath<Root, Value?>, value: Value?) -> Bool {
         if root[keyPath: path] != value {
             root[keyPath: path] = value
@@ -35,6 +36,7 @@ public extension NSManagedObject {
     ///   - value: A value to apply
     /// - Returns: A Bool value, indicating if value applied or there is no changes
     /// - Tag: applyValue
+    @discardableResult
     static func applyValue<Value: Equatable, Root>(to root: Root, path: ReferenceWritableKeyPath<Root, Value>, value: Value) -> Bool {
         if root[keyPath: path] != value {
             root[keyPath: path] = value

@@ -3,8 +3,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public extension NSPredicate {
 

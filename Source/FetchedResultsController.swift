@@ -3,8 +3,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public enum FetchedResultsControllerChangeType {
     case insert(indexPath: IndexPath)
@@ -103,13 +103,6 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     /// - Returns: The number of items in section with specified index
     public func numberOfItemsInSection(_ index: Int) -> Int {
         return fetchedResultsController.sections?[index].numberOfObjects ?? 0
-    }
-
-    ///
-    /// - Parameter index: An index of requested section
-    /// - Returns: Name of the section
-    public func sectionName(_ index: Int) -> String? {
-        return fetchedResultsController.sections?[index].name
     }
 
     ///
