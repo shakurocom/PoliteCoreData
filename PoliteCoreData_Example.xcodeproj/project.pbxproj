@@ -15,6 +15,8 @@
 		174192812886C8FD00161123 /* PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; };
 		174192822886C8FD00161123 /* PoliteCoreData_Framework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */; };
+		17B679D1288964BF007ED061 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CE288964BF007ED061 /* AppAppearance.swift */; };
+		17B679D2288964BF007ED061 /* NavigationBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */; };
 		CEEB17D79178F98078DA2BF2 /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,8 @@
 		174192422886B70C00161123 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		17B679CB2889642F007ED061 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		17B679CE288964BF007ED061 /* AppAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarAppearance.swift; sourceTree = "<group>"; };
 		6DB465880E9AD98AC5589C15 /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B38D68B831D69EE1DCE1D96E /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +85,7 @@
 		174192332886B70A00161123 /* PoliteCoreData_Example */ = {
 			isa = PBXGroup;
 			children = (
+				17B679CD288964BF007ED061 /* Appearance */,
 				174192342886B70A00161123 /* AppDelegate.swift */,
 				174192382886B70A00161123 /* ViewController.swift */,
 				1741923A2886B70A00161123 /* Main.storyboard */,
@@ -90,6 +95,15 @@
 				17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */,
 			);
 			path = PoliteCoreData_Example;
+			sourceTree = "<group>";
+		};
+		17B679CD288964BF007ED061 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				17B679CE288964BF007ED061 /* AppAppearance.swift */,
+				17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */,
+			);
+			path = Appearance;
 			sourceTree = "<group>";
 		};
 		B35F5C6CC23DE2C468394B27 /* Frameworks */ = {
@@ -230,6 +244,8 @@
 				17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */,
 				174192392886B70A00161123 /* ViewController.swift in Sources */,
 				174192352886B70A00161123 /* AppDelegate.swift in Sources */,
+				17B679D1288964BF007ED061 /* AppAppearance.swift in Sources */,
+				17B679D2288964BF007ED061 /* NavigationBarAppearance.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
