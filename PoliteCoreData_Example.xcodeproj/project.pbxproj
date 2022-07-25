@@ -14,16 +14,12 @@
 		174192812886C8FD00161123 /* PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; };
 		174192822886C8FD00161123 /* PoliteCoreData_Framework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1796355D2889770800A80B40 /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1796355C2889770800A80B40 /* Pods_PoliteCoreData_Example.framework */; };
-		1796356028897AFD00A80B40 /* ExampleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1796355F28897AFD00A80B40 /* ExampleCell.swift */; };
-		17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */; };
-		17B679D1288964BF007ED061 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CE288964BF007ED061 /* AppAppearance.swift */; };
-		17B679D2288964BF007ED061 /* NavigationBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */; };
-		17B679D52889655E007ED061 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679D42889655E007ED061 /* ExampleViewController.swift */; };
-		17B679DB288966C6007ED061 /* CDListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679D7288966C6007ED061 /* CDListItem+CoreDataProperties.swift */; };
-		17B679DC288966C6007ED061 /* CDListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679D8288966C6007ED061 /* CDListItem+CoreDataClass.swift */; };
-		17B679DD288966C6007ED061 /* CDListItem+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679DA288966C6007ED061 /* CDListItem+extensions.swift */; };
-		17B679DF28896717007ED061 /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679DE28896717007ED061 /* ListItem.swift */; };
-		17B679E12889686D007ED061 /* ExamplePoliteCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B679E02889686D007ED061 /* ExamplePoliteCoreData.swift */; };
+		17DBBB4B288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB46288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift */; };
+		17DBBB4C288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB47288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift */; };
+		17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB48288EAD970076FE44 /* CDEntity+Update.swift */; };
+		17DBBB4E288EAD970076FE44 /* ExampleEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB49288EAD970076FE44 /* ExampleEntity.swift */; };
+		17DBBB51288EAEB80076FE44 /* CoreDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB4F288EAEB80076FE44 /* CoreDataExample.xcdatamodeld */; };
+		17DBBB53288EB08E0076FE44 /* ExampleCoreDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,16 +45,12 @@
 		174192422886B70C00161123 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		174192802886C8FD00161123 /* PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1796355C2889770800A80B40 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1796355F28897AFD00A80B40 /* ExampleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCell.swift; sourceTree = "<group>"; };
-		17B679CB2889642F007ED061 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
-		17B679CE288964BF007ED061 /* AppAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
-		17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarAppearance.swift; sourceTree = "<group>"; };
-		17B679D42889655E007ED061 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
-		17B679D7288966C6007ED061 /* CDListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		17B679D8288966C6007ED061 /* CDListItem+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
-		17B679DA288966C6007ED061 /* CDListItem+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDListItem+extensions.swift"; sourceTree = "<group>"; };
-		17B679DE28896717007ED061 /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
-		17B679E02889686D007ED061 /* ExamplePoliteCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplePoliteCoreData.swift; sourceTree = "<group>"; };
+		17DBBB46288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDExampleEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		17DBBB47288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDExampleEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		17DBBB48288EAD970076FE44 /* CDEntity+Update.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDEntity+Update.swift"; sourceTree = "<group>"; };
+		17DBBB49288EAD970076FE44 /* ExampleEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleEntity.swift; sourceTree = "<group>"; };
+		17DBBB50288EAEB80076FE44 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleCoreDataViewController.swift; sourceTree = "<group>"; };
 		6DB465880E9AD98AC5589C15 /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B38D68B831D69EE1DCE1D96E /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FC95270DE4C70F1D24EBC711 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,47 +90,27 @@
 		174192332886B70A00161123 /* PoliteCoreData_Example */ = {
 			isa = PBXGroup;
 			children = (
-				17B679CD288964BF007ED061 /* Appearance */,
 				17B679D6288966C6007ED061 /* CoreData */,
 				174192342886B70A00161123 /* AppDelegate.swift */,
-				17B679DE28896717007ED061 /* ListItem.swift */,
-				1796355F28897AFD00A80B40 /* ExampleCell.swift */,
-				17B679D42889655E007ED061 /* ExampleViewController.swift */,
-				17B679E02889686D007ED061 /* ExamplePoliteCoreData.swift */,
-				17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */,
+				17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */,
 				1741923D2886B70C00161123 /* Assets.xcassets */,
 				1741923A2886B70A00161123 /* Main.storyboard */,
+				17DBBB4F288EAEB80076FE44 /* CoreDataExample.xcdatamodeld */,
 				1741923F2886B70C00161123 /* LaunchScreen.storyboard */,
 				174192422886B70C00161123 /* Info.plist */,
 			);
 			path = PoliteCoreData_Example;
 			sourceTree = "<group>";
 		};
-		17B679CD288964BF007ED061 /* Appearance */ = {
-			isa = PBXGroup;
-			children = (
-				17B679CE288964BF007ED061 /* AppAppearance.swift */,
-				17B679CF288964BF007ED061 /* NavigationBarAppearance.swift */,
-			);
-			path = Appearance;
-			sourceTree = "<group>";
-		};
 		17B679D6288966C6007ED061 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				17B679D9288966C6007ED061 /* Extensions */,
-				17B679D7288966C6007ED061 /* CDListItem+CoreDataProperties.swift */,
-				17B679D8288966C6007ED061 /* CDListItem+CoreDataClass.swift */,
+				17DBBB48288EAD970076FE44 /* CDEntity+Update.swift */,
+				17DBBB47288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift */,
+				17DBBB46288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift */,
+				17DBBB49288EAD970076FE44 /* ExampleEntity.swift */,
 			);
 			path = CoreData;
-			sourceTree = "<group>";
-		};
-		17B679D9288966C6007ED061 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				17B679DA288966C6007ED061 /* CDListItem+extensions.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		B35F5C6CC23DE2C468394B27 /* Frameworks */ = {
@@ -295,17 +267,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17B679CC2889642F007ED061 /* DataModel.xcdatamodeld in Sources */,
+				17DBBB4B288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift in Sources */,
+				17DBBB4E288EAD970076FE44 /* ExampleEntity.swift in Sources */,
+				17DBBB53288EB08E0076FE44 /* ExampleCoreDataViewController.swift in Sources */,
+				17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */,
+				17DBBB4C288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift in Sources */,
+				17DBBB51288EAEB80076FE44 /* CoreDataExample.xcdatamodeld in Sources */,
 				174192352886B70A00161123 /* AppDelegate.swift in Sources */,
-				17B679E12889686D007ED061 /* ExamplePoliteCoreData.swift in Sources */,
-				1796356028897AFD00A80B40 /* ExampleCell.swift in Sources */,
-				17B679DC288966C6007ED061 /* CDListItem+CoreDataClass.swift in Sources */,
-				17B679DF28896717007ED061 /* ListItem.swift in Sources */,
-				17B679DD288966C6007ED061 /* CDListItem+extensions.swift in Sources */,
-				17B679DB288966C6007ED061 /* CDListItem+CoreDataProperties.swift in Sources */,
-				17B679D1288964BF007ED061 /* AppAppearance.swift in Sources */,
-				17B679D2288964BF007ED061 /* NavigationBarAppearance.swift in Sources */,
-				17B679D52889655E007ED061 /* ExampleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,13 +497,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		17B679CA2889642F007ED061 /* DataModel.xcdatamodeld */ = {
+		17DBBB4F288EAEB80076FE44 /* CoreDataExample.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				17B679CB2889642F007ED061 /* DataModel.xcdatamodel */,
+				17DBBB50288EAEB80076FE44 /* Model.xcdatamodel */,
 			);
-			currentVersion = 17B679CB2889642F007ED061 /* DataModel.xcdatamodel */;
-			path = DataModel.xcdatamodeld;
+			currentVersion = 17DBBB50288EAEB80076FE44 /* Model.xcdatamodel */;
+			path = CoreDataExample.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
