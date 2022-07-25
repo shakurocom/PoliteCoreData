@@ -384,6 +384,7 @@ public extension PoliteCoreStorage {
                                                                predicate: NSPredicate? = nil,
                                                                sectionNameKeyPath: String? = nil,
                                                                cacheName: String? = nil,
+                                                               relationshipKeyPathsForPrefetching: [String]? = nil,
                                                                configureRequest: ((_ request: NSFetchRequest<T>) -> Void)?) -> NSFetchedResultsController<T> {
 
         assert(Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
@@ -391,6 +392,7 @@ public extension PoliteCoreStorage {
         request.fetchBatchSize = Constant.defaultBatchSize
         request.returnsObjectsAsFaults = false
         request.includesPropertyValues = true
+        request.relationshipKeyPathsForPrefetching = relationshipKeyPathsForPrefetching
         configureRequest?(request)
 
         let resultsController: NSFetchedResultsController<T> = NSFetchedResultsController(fetchRequest: request,

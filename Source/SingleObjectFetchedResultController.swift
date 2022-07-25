@@ -35,6 +35,15 @@ public final class SingleObjectFetchedResultController<EntityType, ResultType: M
         updateResult()
     }
 
+    public func resultTyped<T: ManagedEntity>() -> T? {
+        guard fetchedResultsController.numberOfSections() > resultIndexPath.section,
+              fetchedResultsController.numberOfItemsInSection(resultIndexPath.section) > resultIndexPath.row
+        else {
+            return nil
+        }
+        return fetchedResultsController.itemTyped(indexPath: resultIndexPath)
+    }
+
 }
 
 // MARK: - Private
@@ -66,7 +75,7 @@ private extension SingleObjectFetchedResultController {
                 result = nil
                 return
         }
-        result = fetchedResultsController.itemAtIndexPath(resultIndexPath)
+        result = fetchedResultsController.item(indexPath: resultIndexPath)
     }
 
 }
