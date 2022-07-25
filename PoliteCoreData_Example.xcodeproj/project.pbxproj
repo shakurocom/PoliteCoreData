@@ -72,7 +72,7 @@
 		17DBBB49288EAD970076FE44 /* ExampleEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleEntity.swift; sourceTree = "<group>"; };
 		17DBBB50288EAEB80076FE44 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleCoreDataViewController.swift; sourceTree = "<group>"; };
-		17DBBB58288EB1F40076FE44 /* PoliteCoreData_ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PoliteCoreData_ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		17DBBB58288EB1F40076FE44 /* PoliteCoreDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PoliteCoreDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17DBBB65288EB3EF0076FE44 /* PoliteCoreDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoliteCoreDataTests.swift; sourceTree = "<group>"; };
 		17DBBB67288EB4330076FE44 /* V2_to_V3_MigrationPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = V2_to_V3_MigrationPolicy.swift; sourceTree = "<group>"; };
 		17DBBB68288EB4330076FE44 /* V1_to_V2_MigrationPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = V1_to_V2_MigrationPolicy.swift; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				174192312886B70A00161123 /* PoliteCoreData_Example.app */,
-				17DBBB58288EB1F40076FE44 /* PoliteCoreData_ExampleTests.xctest */,
+				17DBBB58288EB1F40076FE44 /* PoliteCoreDataTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -218,9 +218,9 @@
 			productReference = 174192312886B70A00161123 /* PoliteCoreData_Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		17DBBB57288EB1F40076FE44 /* PoliteCoreData_ExampleTests */ = {
+		17DBBB57288EB1F40076FE44 /* PoliteCoreDataTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 17DBBB5E288EB1F40076FE44 /* Build configuration list for PBXNativeTarget "PoliteCoreData_ExampleTests" */;
+			buildConfigurationList = 17DBBB5E288EB1F40076FE44 /* Build configuration list for PBXNativeTarget "PoliteCoreDataTests" */;
 			buildPhases = (
 				17DBBB54288EB1F40076FE44 /* Sources */,
 				17DBBB55288EB1F40076FE44 /* Frameworks */,
@@ -231,9 +231,9 @@
 			dependencies = (
 				17DBBB5D288EB1F40076FE44 /* PBXTargetDependency */,
 			);
-			name = PoliteCoreData_ExampleTests;
+			name = PoliteCoreDataTests;
 			productName = PoliteCoreData_ExampleTests;
-			productReference = 17DBBB58288EB1F40076FE44 /* PoliteCoreData_ExampleTests.xctest */;
+			productReference = 17DBBB58288EB1F40076FE44 /* PoliteCoreDataTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -269,7 +269,7 @@
 			projectRoot = "";
 			targets = (
 				174192302886B70A00161123 /* PoliteCoreData_Example */,
-				17DBBB57288EB1F40076FE44 /* PoliteCoreData_ExampleTests */,
+				17DBBB57288EB1F40076FE44 /* PoliteCoreDataTests */,
 			);
 		};
 /* End PBXProject section */
@@ -650,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		17DBBB5E288EB1F40076FE44 /* Build configuration list for PBXNativeTarget "PoliteCoreData_ExampleTests" */ = {
+		17DBBB5E288EB1F40076FE44 /* Build configuration list for PBXNativeTarget "PoliteCoreDataTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				17DBBB5F288EB1F40076FE44 /* Debug */,
