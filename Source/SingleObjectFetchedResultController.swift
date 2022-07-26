@@ -3,9 +3,8 @@
 //
 //
 
-import Foundation
-import UIKit
 import CoreData
+import Foundation
 
 /// Wrapper on NSFetchedResultsController, provides easy way to observe single entity.
 /// See: [FetchedResultsController](x-source-tag://FetchedResultsController) for more info
@@ -34,6 +33,15 @@ public final class SingleObjectFetchedResultController<EntityType, ResultType: M
         willChange?(self)
         try fetchedResultsController.performFetch(predicate: predicate)
         updateResult()
+    }
+
+    public func resultTyped<T: ManagedEntity>() -> T? {
+        guard fetchedResultsController.numberOfSections() > resultIndexPath.section,
+              fetchedResultsController.numberOfItemsInSection(resultIndexPath.section) > resultIndexPath.row
+        else {
+            return nil
+        }
+        return fetchedResultsController.itemTyped(indexPath: resultIndexPath)
     }
 
 }
@@ -67,7 +75,7 @@ private extension SingleObjectFetchedResultController {
                 result = nil
                 return
         }
-        result = fetchedResultsController.itemAtIndexPath(resultIndexPath)
+        result = fetchedResultsController.item(indexPath: resultIndexPath)
     }
 
 }

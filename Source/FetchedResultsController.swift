@@ -3,8 +3,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public enum FetchedResultsControllerChangeType {
     case insert(indexPath: IndexPath)
@@ -106,6 +106,13 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     }
 
     ///
+    /// - Parameter index: An index of requested section
+    /// - Returns: Name of the section
+    public func sectionName(_ index: Int) -> String? {
+        return fetchedResultsController.sections?[index].name
+    }
+
+    ///
     /// - Returns: Number of sections
     public func numberOfSections() -> Int {
         return fetchedResultsController.sections?.count ?? 0
@@ -115,14 +122,14 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     /// - Parameter indexPath: An index path in the fetch results.
     /// - Returns: The fetched entity at a given indexPath.
     /// - Tag: funcItemAtIndexPathTyped
-    public func itemAtIndexPath(_ indexPath: IndexPath) -> ResultType {
+    public func item(indexPath: IndexPath) -> ResultType {
         return ResultType(entity: fetchedResultsController.object(at: indexPath))
     }
 
     /// Generic version of [func itemAtIndexPath(_ indexPath: IndexPath) -> ResultType](x-source-tag://funcItemAtIndexPathTyped)
     /// - Parameter indexPath: An index path in the fetch results.
     /// - Returns: The fetched entity at a given indexPath.
-   public func itemAtIndexPath<T: ManagedEntity>(_ indexPath: IndexPath) -> T? {
+   public func itemTyped<T: ManagedEntity>(indexPath: IndexPath) -> T? {
         if let cdItem = fetchedResultsController.object(at: indexPath) as? T.EntityType {
             return T(entity: cdItem)
         } else {
@@ -161,8 +168,8 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     public func forEach(inSection section: Int, body: (IndexPath, ResultType) -> Bool) {
         let numberOfObjects = numberOfItemsInSection(section)
         for row in 0..<numberOfObjects {
-            let path = IndexPath(row: row, section: section)
-            let shouldContinue = body(path, itemAtIndexPath(path))
+            let indexPath = IndexPath(row: row, section: section)
+            let shouldContinue = body(indexPath, item(indexPath: indexPath))
             if !shouldContinue {
                 break
             }
