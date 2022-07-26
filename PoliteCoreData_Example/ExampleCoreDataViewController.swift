@@ -73,7 +73,7 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = tableView.dequeueReusableCell(indexPath: indexPath, reuseIdentifier: Constant.cellReuseIdentifier)
-        if let item = exampleFetchedResultController?.itemAtIndexPath(indexPath) {
+        if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
             cell.textLabel?.text = item.identifier
             cell.detailTextLabel?.text = "createdAt: \(item.createdAt); updatedAt: \(item.updatedAt)"
         }
@@ -107,7 +107,7 @@ private extension ExampleCoreDataViewController {
 
     func deleteItem(at indexPath: IndexPath) {
         let coreStorage = storage
-        if let item = exampleFetchedResultController?.itemAtIndexPath(indexPath) {
+        if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
             coreStorage.save({ (context) in
                 if let entity = coreStorage.findFirstById(CDExampleEntity.self, identifier: item.identifier, inContext: context) {
                     context.delete(entity)
