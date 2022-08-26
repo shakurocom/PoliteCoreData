@@ -8,11 +8,11 @@ import Foundation
 
 /// Wrapper on NSFetchedResultsController, provides easy way to observe single entity.
 /// See: [FetchedResultsController](x-source-tag://FetchedResultsController) for more info
-/// - Tag: SimpleFetchedResultController
-public final class SimpleFetchedResultController<EntityType, ResultType: ManagedEntity> where ResultType.EntityType == EntityType {
+/// - Tag: SimpleFetchedResultsController
+public final class SimpleFetchedResultsController<EntityType, ResultType: ManagedEntity> where ResultType.EntityType == EntityType {
 
-    public var willChange: ((_ controller: SimpleFetchedResultController<EntityType, ResultType>) -> Void)?
-    public var didChange: ((_ controller: SimpleFetchedResultController<EntityType, ResultType>, _ changes: [FetchedResultsControllerChange]) -> Void)?
+    public var willChange: ((_ controller: SimpleFetchedResultsController<EntityType, ResultType>) -> Void)?
+    public var didChange: ((_ controller: SimpleFetchedResultsController<EntityType, ResultType>, _ changes: [FetchedResultsControllerChange]) -> Void)?
 
     private let fetchedResultsController: FetchedResultsController<EntityType, ResultType>
     private var combinedChanges: [FetchedResultsControllerChange] = []
