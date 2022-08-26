@@ -21,7 +21,7 @@ public extension NSPredicate {
     ///   - argumentArray: The arguments for additional predicate
     /// - Returns: The compound predicate "(identifierKey = identifier) AND (additional predicate format)"
     /// - Tag: objectWithIDPredicate
-    class func objectWithIDPredicate(_ identifier: PredicateConvertible,
+    class func entityWithIDPredicate(identifier: PredicateConvertible,
                                      identifierKey: String = Constant.defaultIdKey,
                                      andPredicateFormat format: String? = nil,
                                      argumentArray: [Any]? = nil) -> NSPredicate {
@@ -48,19 +48,17 @@ public extension PoliteCoreStorage {
     ///   - argumentArray: Array of arguments for additional predicate. See [objectWithIDPredicate](x-source-tag://PredicateConvertible)
     /// - Returns: First found or created entity, never returns nil
     /// - Tag: findFirstByIdOrCreate
-    func findFirstByIdOrCreate<T: NSManagedObject>(_ entityType: T.Type,
+    func findFirstByIdOrCreate<T: NSManagedObject>(entityType: T.Type,
                                                    identifier: PredicateConvertible,
                                                    identifierKey: String = NSPredicate.Constant.defaultIdKey,
                                                    inContext context: NSManagedObjectContext,
                                                    andPredicateFormat format: String? = nil,
                                                    argumentArray: [Any]? = nil) -> T {
-        let predicate = NSPredicate.objectWithIDPredicate(identifier,
+        let predicate = NSPredicate.entityWithIDPredicate(identifier: identifier,
                                                           identifierKey: identifierKey,
                                                           andPredicateFormat: format,
                                                           argumentArray: argumentArray)
-        return findFirstOrCreate(entityType,
-                                 withPredicate: predicate,
-                                 inContext: context)
+        return findFirstOrCreate(entityType: entityType, predicate: predicate, context: context)
     }
 
     /// Finds first entity that matches identifier and additional predicate
@@ -72,17 +70,17 @@ public extension PoliteCoreStorage {
     ///   - format: Format for additional predicate. See [objectWithIDPredicate](x-source-tag://PredicateConvertible)
     ///   - argumentArray: Array of arguments for additional predicate. See [objectWithIDPredicate](x-source-tag://PredicateConvertible)
     /// - Returns: First found entity or nil.
-    func findFirstById<T: NSManagedObject>(_ entityType: T.Type,
+    func findFirstById<T: NSManagedObject>(entityType: T.Type,
                                            identifier: PredicateConvertible,
                                            identifierKey: String = NSPredicate.Constant.defaultIdKey,
                                            inContext context: NSManagedObjectContext,
                                            andPredicateFormat format: String? = nil,
                                            argumentArray: [Any]? = nil) -> T? {
-        let predicate = NSPredicate.objectWithIDPredicate(identifier,
+        let predicate = NSPredicate.entityWithIDPredicate(identifier: identifier,
                                                           identifierKey: identifierKey,
                                                           andPredicateFormat: format,
                                                           argumentArray: argumentArray)
-        return findFirst(entityType, withPredicate: predicate, inContext: context)
+        return findFirst(entityType: entityType, predicate: predicate, context: context)
     }
 
 }
