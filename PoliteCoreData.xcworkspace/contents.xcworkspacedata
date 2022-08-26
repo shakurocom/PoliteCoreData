@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:.swiftlint.yml">
+   </FileRef>
+   <FileRef
       location = "group:PoliteCoreData_Framework.xcodeproj">
    </FileRef>
    <FileRef

@@ -14,5 +14,5 @@ end
 target 'PoliteCoreData_Example' do
     project 'PoliteCoreData_Example.xcodeproj'
     pod 'Shakuro.CommonTypes', '1.1.2'
-    pod 'SwiftLint', '0.43.1'
+    pod 'SwiftLint', '0.47.0'
 end
