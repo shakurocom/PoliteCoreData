@@ -363,7 +363,7 @@ public extension PoliteCoreStorage {
     func findAllInMainQueueContext<T: NSManagedObject>(entityType: T.Type,
                                                        sortDescriptors: [NSSortDescriptor],
                                                        predicate: NSPredicate? = nil) -> [T]? {
-        return findAll(entityType: entityType, inContext: mainQueueContext, sortDescriptors: sortDescriptors, predicate: predicate)
+        return findAll(entityType: entityType, context: mainQueueContext, sortDescriptors: sortDescriptors, predicate: predicate)
     }
 
     /// Returns new NSFetchedResultsController for using in main queue.
@@ -578,7 +578,7 @@ public extension PoliteCoreStorage {
     /// - Returns: Array of entities
     /// - Tag: findAll
     func findAll<T: NSManagedObject>(entityType: T.Type,
-                                     inContext context: NSManagedObjectContext,
+                                     context: NSManagedObjectContext,
                                      sortDescriptors: [NSSortDescriptor]? = nil,
                                      predicate: NSPredicate? = nil) -> [T] {
         let request = createRequest(entityType: entityType, sortDescriptors: sortDescriptors, predicate: predicate)
