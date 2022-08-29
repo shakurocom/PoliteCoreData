@@ -1,12 +1,12 @@
 //
-// Copyright (c) 2019 Shakuro (https://shakuro.com/)
+// Copyright (c) 2019-2022 Shakuro (https://shakuro.com/)
 //
 //
 
 import CoreData
 import Foundation
 
-public enum FetchedResultsControllerChangeType {
+public enum FetchedResultsControllerChange {
     case insert(indexPath: IndexPath)
     case delete(indexPath: IndexPath)
     case move(indexPath: IndexPath, newIndexPath: IndexPath)
@@ -21,26 +21,18 @@ public enum FetchedResultsControllerChangeType {
 /// - Tag: FetchedResultsController
 public final class FetchedResultsController<EntityType, ResultType: ManagedEntity>: NSObject where ResultType.EntityType == EntityType {
 
-    /**
-     Notifies that section and object changes are about to be processed and notifications will be sent.
-     Is equivalent to NSFetchedResultsControllerDelegate controllerWillChangeContent
-     */
+    /// Notifies that section and object changes are about to be processed and notifications will be sent.
+    /// Is equivalent to NSFetchedResultsControllerDelegate controllerWillChangeContent
     public var willChangeContent: ((_ controller: FetchedResultsController<EntityType, ResultType>) -> Void)?
 
-    /**
-     Notifies that all section and object changes have been sent.
-     Is equivalent to NSFetchedResultsControllerDelegate controllerDidChangeContent
-     */
+    /// Notifies that all section and entity changes have been sent.
+    /// Is equivalent to NSFetchedResultsControllerDelegate controllerDidChangeContent
     public var didChangeContent: ((_ controller: FetchedResultsController<EntityType, ResultType>) -> Void)?
 
-    /**
-     Notifies about particular changes such as add, remove, move, or update.
-     */
-    public var didChangeFetchedResults: ((_ controller: FetchedResultsController<EntityType, ResultType>, _ type: FetchedResultsControllerChangeType) -> Void)?
+    /// Notifies about particular changes such as add, remove, move, or update.
+    public var didChangeEntity: ((_ controller: FetchedResultsController<EntityType, ResultType>, _ change: FetchedResultsControllerChange) -> Void)?
 
-    /**
-     Wrapped NSFetchedResultsController
-     */
+    /// Wrapped NSFetchedResultsController
     public let fetchedResultsController: NSFetchedResultsController<EntityType>
 
     private let delegateProxy = HiddenDelegateProxy<EntityType, ResultType>()
@@ -152,7 +144,7 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     ///
     /// - Parameter url: The URI representation of an object ID
     /// - Returns: An entity specified by URL or nil.
-    public func itemWithURL(_ url: URL) -> ResultType? {
+    public func item(url: URL) -> ResultType? {
         guard let objectID = fetchedResultsController.managedObjectContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),
             let object: EntityType = (try? fetchedResultsController.managedObjectContext.existingObject(with: objectID)) as? EntityType else {
                 return nil
@@ -164,7 +156,7 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     ///
     /// - Parameters:
     ///   - section: The section index
-    ///   - body: A closure that takes an entity and index path from the section as a parameters.
+    ///   - body: A closure that takes an entity and index path from the section as a parameters. Return `false` to abort enumeration.
     public func forEach(inSection section: Int, body: (IndexPath, ResultType) -> Bool) {
         let numberOfObjects = numberOfItemsInSection(section)
         for row in 0..<numberOfObjects {
@@ -195,24 +187,24 @@ private final class HiddenDelegateProxy<EntityType, ResultType: ManagedEntity>: 
         switch type {
         case .insert:
             if let actualPath: IndexPath = newIndexPath {
-                actualTarget.didChangeFetchedResults?(actualTarget, .insert(indexPath: actualPath))
+                actualTarget.didChangeEntity?(actualTarget, .insert(indexPath: actualPath))
             }
         case .delete:
             if let actualPath: IndexPath = indexPath {
-                actualTarget.didChangeFetchedResults?(actualTarget, .delete(indexPath: actualPath))
+                actualTarget.didChangeEntity?(actualTarget, .delete(indexPath: actualPath))
             }
         case .move:
             if let actualPath: IndexPath = indexPath,
                 let actualNewIndexPath: IndexPath = newIndexPath {
                 if actualPath != actualNewIndexPath {
-                    actualTarget.didChangeFetchedResults?(actualTarget, .move(indexPath: actualPath, newIndexPath: actualNewIndexPath))
+                    actualTarget.didChangeEntity?(actualTarget, .move(indexPath: actualPath, newIndexPath: actualNewIndexPath))
                 } else {
-                    actualTarget.didChangeFetchedResults?(actualTarget, .update(indexPath: actualNewIndexPath))
+                    actualTarget.didChangeEntity?(actualTarget, .update(indexPath: actualNewIndexPath))
                 }
             }
         case .update:
             if let actualPath: IndexPath = indexPath {
-                actualTarget.didChangeFetchedResults?(actualTarget, .update(indexPath: actualPath))
+                actualTarget.didChangeEntity?(actualTarget, .update(indexPath: actualPath))
             }
         @unknown default:
             break
@@ -228,9 +220,9 @@ private final class HiddenDelegateProxy<EntityType, ResultType: ManagedEntity>: 
         }
         switch type {
         case .insert:
-            actualTarget.didChangeFetchedResults?(actualTarget, .insertSection(index: sectionIndex))
+            actualTarget.didChangeEntity?(actualTarget, .insertSection(index: sectionIndex))
         case .delete:
-            actualTarget.didChangeFetchedResults?(actualTarget, .deleteSection(index: sectionIndex))
+            actualTarget.didChangeEntity?(actualTarget, .deleteSection(index: sectionIndex))
         default:
             break
         }

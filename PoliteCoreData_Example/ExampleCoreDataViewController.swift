@@ -12,7 +12,7 @@ internal class ExampleCoreDataViewController: UIViewController {
     @IBOutlet private var contentTableView: UITableView!
 
     private var exampleFetchedResultController: FetchedResultsController<CDExampleEntity, ManagedExampleEntity>?
-    private var changes: [FetchedResultsControllerChangeType] = []
+    private var changes: [FetchedResultsControllerChange] = []
 
     private enum Constant {
         static let cellReuseIdentifier: String = "UITableViewCell"
@@ -33,15 +33,18 @@ internal class ExampleCoreDataViewController: UIViewController {
         title = NSLocalizedString("Core Data", comment: "")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
 
-        let controller = storage.mainQueueFetchedResultsController(CDExampleEntity.self, sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) { (request) in
-            // change fetchRequest properties here
-            debugPrint(request)
-        }
+        let controller = storage.mainQueueFetchedResultsController(
+            entityType: CDExampleEntity.self,
+            sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)],
+            configureRequest: { (request) in
+                // change fetchRequest properties here
+                debugPrint(request)
+        })
         exampleFetchedResultController = FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
 
         exampleFetchedResultController?.willChangeContent = { (_) in }
 
-        exampleFetchedResultController?.didChangeFetchedResults = {[weak self] (_, changeType) in
+        exampleFetchedResultController?.didChangeEntity = {[weak self] (_, changeType) in
             guard let actualSelf = self else {
                 return
             }
@@ -96,7 +99,9 @@ private extension ExampleCoreDataViewController {
 
         coreStorage.save({ (context) in
             let notManagedEntity = ExampleEntity(identifier: UUID().uuidString, createdAt: Date(), updatedAt: Date())
-            let newEntity = coreStorage.findFirstByIdOrCreate(CDExampleEntity.self, identifier: notManagedEntity.identifier, inContext: context)
+            let newEntity = coreStorage.findFirstByIdOrCreate(entityType: CDExampleEntity.self,
+                                                              identifier: notManagedEntity.identifier,
+                                                              inContext: context)
             _ = newEntity.update(entity: notManagedEntity)
         }, completion: { (error) in
             if let actualError = error {
@@ -109,7 +114,7 @@ private extension ExampleCoreDataViewController {
         let coreStorage = storage
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
             coreStorage.save({ (context) in
-                if let entity = coreStorage.findFirstById(CDExampleEntity.self, identifier: item.identifier, inContext: context) {
+                if let entity = coreStorage.findFirstById(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context) {
                     context.delete(entity)
                 }
             }, completion: { (error) in
