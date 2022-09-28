@@ -10,7 +10,7 @@
 - [Usage](#usage)
 - [License](#license)
 
-A Swift Core Data wrapper.
+A Swift Core Data wrapper. PoliteCoreData uses Swift models instead Core Data managed objects because their usage is not safe. Also PoliteCoreData supports incremental migration that solves problem migrating between not neighboring versions (e.g version 1 to version 5).
 
 ## Requirements
 
