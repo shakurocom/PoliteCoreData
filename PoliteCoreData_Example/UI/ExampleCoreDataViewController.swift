@@ -83,11 +83,11 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
         return cell
     }
 
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let action = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (_, path) in
-            self?.deleteItem(at: path)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
+            self?.deleteItem(at: indexPath)
         }
-        return [action]
+        return UISwipeActionsConfiguration(actions: [action])
     }
 }
 
