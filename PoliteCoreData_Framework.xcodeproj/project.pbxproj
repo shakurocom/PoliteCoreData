@@ -17,6 +17,11 @@
 		174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924F2886B86400161123 /* PoliteCoreStorage.swift */; };
 		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
 		2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
+		26C590CE2939216B002B611E /* FetchableResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590CD2939216B002B611E /* FetchableResults.swift */; };
+		26C590D02939234C002B611E /* FetchableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590CF2939234C002B611E /* FetchableRequest.swift */; };
+		26C590D2293ABA45002B611E /* ContentCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590D1293ABA45002B611E /* ContentCollection.swift */; };
+		26C590D4293ABE7A002B611E /* ItemsFetchableResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590D3293ABE7A002B611E /* ItemsFetchableResults.swift */; };
+		26C590D6293AC11C002B611E /* SectionsFetchableResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590D5293AC11C002B611E /* SectionsFetchableResults.swift */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
 		D8FAE3F4D47D2B2DE59AA2FA /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */; };
 /* End PBXBuildFile section */
@@ -38,6 +43,11 @@
 		174192582886B9FF00161123 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = Shakuro.PoliteCoreData.podspec; sourceTree = "<group>"; };
 		2497179528B8E60200028816 /* SimpleFetchedResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFetchedResultController.swift; sourceTree = "<group>"; };
+		26C590CD2939216B002B611E /* FetchableResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchableResults.swift; sourceTree = "<group>"; };
+		26C590CF2939234C002B611E /* FetchableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchableRequest.swift; sourceTree = "<group>"; };
+		26C590D1293ABA45002B611E /* ContentCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCollection.swift; sourceTree = "<group>"; };
+		26C590D3293ABE7A002B611E /* ItemsFetchableResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsFetchableResults.swift; sourceTree = "<group>"; };
+		26C590D5293AC11C002B611E /* SectionsFetchableResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionsFetchableResults.swift; sourceTree = "<group>"; };
 		4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B9CC1AD28D864E000DE744A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,6 +99,7 @@
 		174192482886B86400161123 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				26C590CC293915D8002B611E /* SwiftUI */,
 				1741924A2886B86400161123 /* ManagedEntity.swift */,
 				1741924C2886B86400161123 /* NSManagedObject+Update.swift */,
 				1741924F2886B86400161123 /* PoliteCoreStorage.swift */,
@@ -99,6 +110,18 @@
 				2497179528B8E60200028816 /* SimpleFetchedResultController.swift */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		26C590CC293915D8002B611E /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				26C590D1293ABA45002B611E /* ContentCollection.swift */,
+				26C590CD2939216B002B611E /* FetchableResults.swift */,
+				26C590D3293ABE7A002B611E /* ItemsFetchableResults.swift */,
+				26C590D5293AC11C002B611E /* SectionsFetchableResults.swift */,
+				26C590CF2939234C002B611E /* FetchableRequest.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		40D30B728EB52A66633C289D /* Frameworks */ = {
@@ -225,14 +248,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26C590CE2939216B002B611E /* FetchableResults.swift in Sources */,
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
+				26C590D2293ABA45002B611E /* ContentCollection.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
+				26C590D02939234C002B611E /* FetchableRequest.swift in Sources */,
+				26C590D4293ABE7A002B611E /* ItemsFetchableResults.swift in Sources */,
 				2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */,
 				174192552886B86400161123 /* FetchedResultsController.swift in Sources */,
 				174192542886B86400161123 /* SingleObjectFetchedResultController.swift in Sources */,
+				26C590D6293AC11C002B611E /* SectionsFetchableResults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

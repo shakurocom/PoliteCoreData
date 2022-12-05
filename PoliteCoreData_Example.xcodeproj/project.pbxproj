@@ -32,6 +32,7 @@
 		17DBBB80288EB47C0076FE44 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */; };
 		17F226902938C33600D604D2 /* HostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F2268F2938C33600D604D2 /* HostingViewController.swift */; };
 		17F226922938C69700D604D2 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F226912938C69700D604D2 /* SwiftUIView.swift */; };
+		26C590D8293ACA16002B611E /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590D7293ACA16002B611E /* DataStorage.swift */; };
 		9931AA247066421B87907BF7 /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96266CAE5BDFA38746908223 /* Pods_PoliteCoreData_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,7 @@
 		17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model_v2_to_v3.xcmappingmodel; sourceTree = "<group>"; };
 		17F2268F2938C33600D604D2 /* HostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostingViewController.swift; sourceTree = "<group>"; };
 		17F226912938C69700D604D2 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		26C590D7293ACA16002B611E /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
 		517C3D34D3634C3FAFB13BFE /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		628040F3F34CFE157B8BBAE7 /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		96266CAE5BDFA38746908223 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +199,7 @@
 		6B9CC1AC28D8645700DE744A /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				26C590D7293ACA16002B611E /* DataStorage.swift */,
 				17F2268F2938C33600D604D2 /* HostingViewController.swift */,
 				17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */,
 				17F226912938C69700D604D2 /* SwiftUIView.swift */,
@@ -390,6 +393,7 @@
 				17DBBB4B288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift in Sources */,
 				17DBBB4E288EAD970076FE44 /* ExampleEntity.swift in Sources */,
 				17F226922938C69700D604D2 /* SwiftUIView.swift in Sources */,
+				26C590D8293ACA16002B611E /* DataStorage.swift in Sources */,
 				17DBBB53288EB08E0076FE44 /* ExampleCoreDataViewController.swift in Sources */,
 				17F226902938C33600D604D2 /* HostingViewController.swift in Sources */,
 				17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */,

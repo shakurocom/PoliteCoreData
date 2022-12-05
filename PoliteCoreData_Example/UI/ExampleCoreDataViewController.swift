@@ -9,8 +9,18 @@ import PoliteCoreData_Framework
 
 internal class ExampleCoreDataViewController: UIViewController {
 
+    class func instantiate(_ storage: DataStorage) -> ExampleCoreDataViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let controller: ExampleCoreDataViewController = storyboard.instantiateViewController(withIdentifier: "ExampleCoreDataViewController")
+
+        controller.storage = storage
+
+        return controller
+    }
+
     @IBOutlet private var contentTableView: UITableView!
 
+    private var storage: DataStorage?
     private var exampleFetchedResultController: FetchedResultsController<CDExampleEntity, ManagedExampleEntity>?
     private var changes: [FetchedResultsControllerChange] = []
 
@@ -18,29 +28,12 @@ internal class ExampleCoreDataViewController: UIViewController {
         static let cellReuseIdentifier: String = "UITableViewCell"
     }
 
-    private var storage: PoliteCoreStorage = {
-        do {
-            let storage = PoliteCoreStorage(configuration: PoliteCoreStorage.Configuration(objectModelName: "CoreDataExample", isExcludedFromBackup: true))
-            try storage.setupStack(removeDBOnSetupFailed: true)
-            return storage
-        } catch let error {
-            fatalError("\(error)")
-        }
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Core Data", comment: "")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
 
-        let controller = storage.mainQueueFetchedResultsController(
-            entityType: CDExampleEntity.self,
-            sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)],
-            configureRequest: { (request) in
-                // change fetchRequest properties here
-                debugPrint(request)
-        })
-        exampleFetchedResultController = FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
+        exampleFetchedResultController = storage?.exampleFetchedResultController()
 
         exampleFetchedResultController?.willChangeContent = { (_) in }
 
@@ -95,33 +88,12 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
 
 private extension ExampleCoreDataViewController {
     @objc func addButtonPressed() {
-        let coreStorage = storage
-
-        coreStorage.save({ (context) in
-            let notManagedEntity = ExampleEntity(identifier: UUID().uuidString, createdAt: Date(), updatedAt: Date())
-            let newEntity = coreStorage.findFirstByIdOrCreate(entityType: CDExampleEntity.self,
-                                                              identifier: notManagedEntity.identifier,
-                                                              inContext: context)
-            _ = newEntity.update(entity: notManagedEntity)
-        }, completion: { (error) in
-            if let actualError = error {
-                assertionFailure("\(actualError)")
-            }
-        })
+        storage?.insertExampleItem(ExampleEntity())
     }
 
     func deleteItem(at indexPath: IndexPath) {
-        let coreStorage = storage
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
-            coreStorage.save({ (context) in
-                if let entity = coreStorage.findFirstById(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context) {
-                    context.delete(entity)
-                }
-            }, completion: { (error) in
-                if let actualError = error {
-                    assertionFailure("\(actualError)")
-                }
-            })
+            storage?.deleteExampleItem(item.identifier)
         }
     }
 

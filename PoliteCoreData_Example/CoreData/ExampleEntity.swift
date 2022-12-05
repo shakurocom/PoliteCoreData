@@ -13,7 +13,7 @@ class ExampleEntity {
     let createdAt: Date
     let updatedAt: Date
 
-    init(identifier: String, createdAt: Date, updatedAt: Date) {
+    init(identifier: String = NSUUID().uuidString, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.identifier = identifier
@@ -32,5 +32,15 @@ final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
     override init(entity: CDExampleEntity) {
         objectID = entity.objectID
         super.init(entity: entity)
+    }
+}
+
+extension ManagedExampleEntity: Hashable {
+    static func == (lhs: ManagedExampleEntity, rhs: ManagedExampleEntity) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
     }
 }
