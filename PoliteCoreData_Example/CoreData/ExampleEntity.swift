@@ -22,25 +22,16 @@ class ExampleEntity {
     init(entity: CDExampleEntity) {
         createdAt = Date(timeIntervalSince1970: entity.createdAt)
         updatedAt = Date(timeIntervalSince1970: entity.updatedAt)
-        identifier = entity.identifier ?? UUID().uuidString
+        identifier = entity.identifier
     }
 }
 
 final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
+
     let objectID: NSManagedObjectID
 
     override init(entity: CDExampleEntity) {
         objectID = entity.objectID
         super.init(entity: entity)
-    }
-}
-
-extension ManagedExampleEntity: Hashable {
-    static func == (lhs: ManagedExampleEntity, rhs: ManagedExampleEntity) -> Bool {
-        return lhs.identifier == rhs.identifier
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(identifier)
     }
 }

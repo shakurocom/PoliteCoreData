@@ -18,30 +18,22 @@ struct SwiftUIView: View {
 
     var body: some View {
         List {
-            ForEach(items, id: \.self) { item in
-                Text(item.identifier)
+            ForEach(items.indices, id: \.self) { index in
+                Text(items[index].identifier)
+                    .font(.system(size: 10.0, weight: .bold))
             }
-            /*
-            ForEach(sections.indices, id: \.self) { section in
-                Section(header: Text(sections[section].name)) {
-                    ForEach(sections[section].items.indices, id: \.self) { item in
-                        Text(sections[section].items[item].identifier)
-                            .font(.system(size: 10.0, weight: .bold))
-                    }
-                }
-            }*/
         }
         .navigationBarHidden(false)
         .listStyle(.plain)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: deleteFirstItem) {
+                Button(action: deleteLastItem) {
                     Image(systemName: "trash")
                 }
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: insertFirstItem) {
+                Button(action: insertLastItem) {
                     Image(systemName: "plus")
                 }
             }
@@ -50,14 +42,11 @@ struct SwiftUIView: View {
 }
 
 private extension SwiftUIView {
-    private func deleteFirstItem() {
-        guard !items.isEmpty else {
-            return
-        }
-        storage.deleteExampleItem(items[0].identifier)
+    private func deleteLastItem() {
+        storage.deleteLastItem()
     }
 
-    private func insertFirstItem() {
-        storage.insertExampleItem(ExampleEntity())
+    private func insertLastItem() {
+        storage.insertLastItem()
     }
 }

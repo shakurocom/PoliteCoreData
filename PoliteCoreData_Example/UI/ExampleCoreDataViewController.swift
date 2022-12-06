@@ -88,12 +88,12 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
 
 private extension ExampleCoreDataViewController {
     @objc func addButtonPressed() {
-        storage?.insertExampleItem(ExampleEntity())
+        storage?.insertLastItem()
     }
 
     func deleteItem(at indexPath: IndexPath) {
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
-            storage?.deleteExampleItem(item.identifier)
+            storage?.deleteItem(item.identifier)
         }
     }
 
