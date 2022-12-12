@@ -11,5 +11,8 @@ public protocol FetchableResults {
 
     associatedtype ResultType: ManagedEntity where EntityType == ResultType.EntityType
 
-    static func createFetchableResults(content: Content<FetchedResultsController<EntityType, ResultType>>) -> Self
+    var stateFlag: Bool { get set }
+
+    init(content: FetchedResultsController<EntityType, ResultType>)
+
 }

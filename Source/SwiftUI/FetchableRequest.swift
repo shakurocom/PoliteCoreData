@@ -25,7 +25,7 @@ public struct FetchableRequest<RequestResults: FetchableResults>: DynamicPropert
         self.fetchedController = controller
         self.animation = animation
 
-        _wrappedValue = State(initialValue: RequestResults.self.createFetchableResults(content: Content(collection: controller)))
+        _wrappedValue = State(initialValue: RequestResults(content: controller))
     }
 
     public mutating func update() {
@@ -37,12 +37,13 @@ public struct FetchableRequest<RequestResults: FetchableResults>: DynamicPropert
         let binding = $wrappedValue
         let animation = animation
 
-        fetchedController.didChangeContent = { controller in
+        fetchedController.didChangeContent = { (_) in
             withAnimation(animation) {
-                binding.wrappedValue = RequestResults.self.createFetchableResults(content: Content(collection: controller))
+                binding.wrappedValue.stateFlag.toggle()
             }
         }
 
         try? fetchedController.performFetch()
     }
+
 }

@@ -8,20 +8,22 @@ import CoreData
 
 public struct ItemsFetchableResults<EntityType, ResultType: ManagedEntity>: FetchableResults where EntityType == ResultType.EntityType {
 
-    public static func createFetchableResults(content: Content<FetchedResultsController<EntityType, ResultType>>) -> ItemsFetchableResults {
-        return ItemsFetchableResults(content: content)
-    }
-
-    private let idString: String = NSUUID().uuidString
+    public var stateFlag: Bool = false
 
     private let section: Int
 
-    private let content: Content<FetchedResultsController<EntityType, ResultType>>
+    private let content: FetchedResultsController<EntityType, ResultType>
 
-    init(section: Int = 0, content: Content<FetchedResultsController<EntityType, ResultType>>) {
+    public init(content: FetchedResultsController<EntityType, ResultType>) {
+        self.section = 0
+        self.content = content
+    }
+
+    init(section: Int = 0, content: FetchedResultsController<EntityType, ResultType>) {
         self.section = section
         self.content = content
     }
+
 }
 
 extension ItemsFetchableResults: RandomAccessCollection {
@@ -31,10 +33,11 @@ extension ItemsFetchableResults: RandomAccessCollection {
     }
 
     public var endIndex: Int {
-        return content.itemsInSection(section)
+        return content.numberOfItemsInSection(section)
     }
 
     public subscript(position: Int) -> ResultType {
-        return content[IndexPath(item: position, section: section)]
+        return content.item(indexPath: IndexPath(item: position, section: section))
     }
+
 }
