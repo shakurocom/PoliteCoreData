@@ -30,6 +30,10 @@
 		17DBBB7E288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */; };
 		17DBBB7F288EB4790076FE44 /* MigrationTestIds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */; };
 		17DBBB80288EB47C0076FE44 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */; };
+		17EBF21A29796FB700D98387 /* Model_v1_to_v2_ids.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB76288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel */; };
+		17EBF21B29796FB900D98387 /* Model_v1_to_v2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB75288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel */; };
+		17EBF21C29796FBC00D98387 /* Model_v2_to_v3_ids.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB77288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel */; };
+		17EBF21D29796FC000D98387 /* Model_v2_to_v3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */; };
 		DD03439EFEE54BFA62687EEF /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F27494B26FA2930CB0415EE /* Pods_PoliteCoreData_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -382,8 +386,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17EBF21B29796FB900D98387 /* Model_v1_to_v2.xcmappingmodel in Sources */,
+				17EBF21A29796FB700D98387 /* Model_v1_to_v2_ids.xcmappingmodel in Sources */,
 				17DBBB4B288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift in Sources */,
+				17EBF21D29796FC000D98387 /* Model_v2_to_v3.xcmappingmodel in Sources */,
 				17DBBB4E288EAD970076FE44 /* ExampleEntity.swift in Sources */,
+				17EBF21C29796FBC00D98387 /* Model_v2_to_v3_ids.xcmappingmodel in Sources */,
 				17DBBB53288EB08E0076FE44 /* ExampleCoreDataViewController.swift in Sources */,
 				17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */,
 				17DBBB4C288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift in Sources */,
