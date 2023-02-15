@@ -26,6 +26,28 @@ class ExampleEntity {
     }
 }
 
+extension ExampleEntity: Hashable {
+
+    static func == (lhs: ExampleEntity, rhs: ExampleEntity) -> Bool {
+        return lhs.identifier == rhs.identifier &&
+        lhs.createdAt.timeIntervalSince1970 == rhs.createdAt.timeIntervalSince1970 &&
+        lhs.updatedAt.timeIntervalSince1970 == rhs.updatedAt.timeIntervalSince1970
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+}
+
+extension ExampleEntity: Identifiable {
+
+    var id: String {
+        return identifier
+    }
+
+}
+
 final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
 
     let objectID: NSManagedObjectID
