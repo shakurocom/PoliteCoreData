@@ -51,11 +51,3 @@ extension FetchedResultsController.Section: Equatable where ResultType: Equatabl
     }
 
 }
-
-extension FetchedResultsController.Section: Hashable where ResultType: Equatable {
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-}

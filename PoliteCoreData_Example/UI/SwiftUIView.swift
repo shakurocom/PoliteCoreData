@@ -7,14 +7,14 @@ import PoliteCoreData_Framework
 
 struct SwiftUIView: View {
 
-    @StateObject private var interactor: ExampleCoreDataInteractor
+    @ObservedObject private var interactor: ExampleCoreDataInteractor
 
     init(storage: DataStorage) {
-        _interactor = StateObject(wrappedValue: ExampleCoreDataInteractor(dataStorage: storage))
+        _interactor = ObservedObject(initialValue: ExampleCoreDataInteractor(dataStorage: storage))
     }
 
     var body: some View {
-        List(interactor.items, id: \.self) { item in
+        List(interactor.items) { item in
             Text(item.identifier)
                 .font(.system(size: 10.0, weight: .bold))
                 .id(item.id)

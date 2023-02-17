@@ -51,13 +51,13 @@ extension PoliteCoreStorage: DataStorage {
         return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
 
-    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> { // FetchableRequest<ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>> {
+    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> {
         let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
         let controller = mainQueueFetchedResultsController(
             entityType: CDExampleEntity.self,
             sortDescriptors: sortDescriptor,
             configureRequest: nil)
 
-        return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller) // FetchableRequest(fetchedResultsController: controller, animation: .default)
+        return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
 }
