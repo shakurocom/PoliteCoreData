@@ -26,28 +26,6 @@ class ExampleEntity {
     }
 }
 
-extension ExampleEntity: Hashable {
-
-    static func == (lhs: ExampleEntity, rhs: ExampleEntity) -> Bool {
-        return lhs.identifier == rhs.identifier &&
-        lhs.createdAt.timeIntervalSince1970 == rhs.createdAt.timeIntervalSince1970 &&
-        lhs.updatedAt.timeIntervalSince1970 == rhs.updatedAt.timeIntervalSince1970
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-}
-
-extension ExampleEntity: Identifiable {
-
-    var id: String {
-        return identifier
-    }
-
-}
-
 final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
 
     let objectID: NSManagedObjectID
@@ -56,4 +34,36 @@ final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
         objectID = entity.objectID
         super.init(entity: entity)
     }
+}
+
+extension ManagedExampleEntity: Identifiable {
+
+    var id: String {
+        return objectID.uriRepresentation().absoluteString
+    }
+
+}
+
+extension ManagedExampleEntity: Equatable {
+
+    static func == (lhs: ManagedExampleEntity, rhs: ManagedExampleEntity) -> Bool {
+        return (
+            lhs.objectID == rhs.objectID &&
+            lhs.identifier == rhs.identifier &&
+            lhs.createdAt.timeIntervalSince1970 == rhs.createdAt.timeIntervalSince1970 &&
+            lhs.updatedAt.timeIntervalSince1970 == rhs.updatedAt.timeIntervalSince1970
+        )
+    }
+
+}
+
+extension ManagedExampleEntity: Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(objectID)
+        hasher.combine(identifier)
+        hasher.combine(createdAt)
+        hasher.combine(updatedAt)
+    }
+
 }
