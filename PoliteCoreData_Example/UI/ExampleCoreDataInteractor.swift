@@ -7,7 +7,7 @@ import PoliteCoreData_Framework
 
 final class ExampleCoreDataInteractor: ObservableObject {
 
-    @Published private(set) var items: LazyList<ManagedExampleEntity> = .empty
+    @Published private(set) var items: LazyList<FetchedResultsController<CDExampleEntity, ManagedExampleEntity>.WrappedResult> = .empty
 
     private let dataStorage: DataStorage
 

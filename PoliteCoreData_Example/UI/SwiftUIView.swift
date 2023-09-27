@@ -14,10 +14,16 @@ struct SwiftUIView: View {
     }
 
     var body: some View {
-        List(interactor.items) { item in
-            Text(item.identifier)
-                .font(.system(size: 10.0, weight: .bold))
-                .id(item.id)
+        List(interactor.items) { result in
+            switch result {
+            case .value(let item):
+                Text(item.identifier)
+                    .font(.system(size: 10.0, weight: .bold))
+            case .empty:
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(height: 1)
+            }
         }
         .animation(.easeInOut, value: interactor.items)
         .navigationBarHidden(false)
