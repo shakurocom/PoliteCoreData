@@ -17,6 +17,8 @@
 		174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924F2886B86400161123 /* PoliteCoreStorage.swift */; };
 		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
 		2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
+		2693C42D2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */; };
+		2693C42F2AC446C200ED7107 /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */; };
 		269712C0299C7D7400756DA4 /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712BF299C7D7400756DA4 /* LazyList.swift */; };
 		269712C4299CE19C00756DA4 /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
@@ -40,6 +42,8 @@
 		174192582886B9FF00161123 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = Shakuro.PoliteCoreData.podspec; sourceTree = "<group>"; };
 		2497179528B8E60200028816 /* SimpleFetchedResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFetchedResultController.swift; sourceTree = "<group>"; };
+		2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+WrappedResult.swift"; sourceTree = "<group>"; };
+		2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+Section.swift"; sourceTree = "<group>"; };
 		269712BF299C7D7400756DA4 /* LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
 		269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+LazyList.swift"; sourceTree = "<group>"; };
 		4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +115,8 @@
 			children = (
 				269712BF299C7D7400756DA4 /* LazyList.swift */,
 				269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */,
+				2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */,
+				2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -241,7 +247,9 @@
 			files = (
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
+				2693C42F2AC446C200ED7107 /* FetchedResultsController+Section.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
+				2693C42D2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
 				269712C0299C7D7400756DA4 /* LazyList.swift in Sources */,

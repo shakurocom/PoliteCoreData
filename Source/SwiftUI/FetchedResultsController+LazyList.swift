@@ -6,48 +6,39 @@ import Foundation
 
 extension FetchedResultsController {
 
-    public struct Section: Identifiable {
-
-        public let id: UUID = UUID()
-
-        public let title: String?
-
-        public let items: LazyList<ResultType>
-
-        public init?(title: String?, items: LazyList<ResultType>?) {
-            guard let items = items else {
-                return nil
-            }
-
-            self.title = title
-            self.items = items
-        }
-
-    }
-
     public var hasFetchedObjects: Bool {
         return fetchedResultsController.fetchedObjects != nil
     }
 
     public func lazySections() -> LazyList<Section> {
-        return LazyList(capacity: numberOfSections()) { [weak self] section in
-            return Section(title: self?.sectionName(section),
-                           items: self?.lazyItems(in: section))
-        }
+        return LazyList(capacity: numberOfSections(), { [weak self] sectionIndex in
+            guard let strongSelf = self,
+                  sectionIndex < strongSelf.numberOfSections(),
+                  sectionIndex >= 0
+            else {
+                return Section()
+            }
+
+            let title = strongSelf.sectionName(sectionIndex)
+            let items = strongSelf.lazyItems(sectionIndex: sectionIndex)
+
+            return Section(title: title, items: items)
+        })
     }
 
-    public func lazyItems(in section: Int = 0) -> LazyList<ResultType> {
-        return LazyList(capacity: numberOfItemsInSection(section)) { [weak self] item in
-            return self?.item(indexPath: IndexPath(item: item, section: section))
-        }
-    }
-
-}
-
-extension FetchedResultsController.Section: Equatable where ResultType: Equatable {
-
-    public static func == (lhs: FetchedResultsController<EntityType, ResultType>.Section, rhs: FetchedResultsController<EntityType, ResultType>.Section) -> Bool {
-        return lhs.title == rhs.title && lhs.items == rhs.items
+    public func lazyItems(sectionIndex: Int = 0) -> LazyList<WrappedResult> {
+        return LazyList(capacity: numberOfItemsInSection(sectionIndex), { [weak self] itemIndex in
+            guard let strongSelf = self,
+                  sectionIndex < strongSelf.numberOfSections(),
+                  sectionIndex >= 0,
+                  itemIndex < strongSelf.numberOfItemsInSection(sectionIndex),
+                  itemIndex >= 0
+            else {
+                return .empty(section: sectionIndex, row: itemIndex)
+            }
+            let indexPath = IndexPath(row: itemIndex, section: sectionIndex)
+            return .value(element: strongSelf.item(indexPath: indexPath))
+        })
     }
 
 }
