@@ -16,7 +16,7 @@ extension FetchedResultsController {
                   sectionIndex < strongSelf.numberOfSections(),
                   sectionIndex >= 0
             else {
-                return Section()
+                return Section(title: "--\(sectionIndex)", items: .empty)
             }
 
             let title = strongSelf.sectionName(sectionIndex)

@@ -12,7 +12,7 @@ extension FetchedResultsController {
 
         public let items: LazyList<WrappedResult>
 
-        public init(title: String? = nil, items: LazyList<WrappedResult> = .empty) {
+        public init(title: String?, items: LazyList<WrappedResult> = .empty) {
             self.title = title
             self.items = items
         }
