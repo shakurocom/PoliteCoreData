@@ -24,15 +24,13 @@ public final class SingleObjectFetchedResultController<EntityType, ResultType: M
     }
 
     public func performFetch() throws {
-        willChange?(self)
         try fetchedResultsController.performFetch()
-        updateResult()
+        updateResult(report: false)
     }
 
     public func performFetch(predicate: NSPredicate) throws {
-        willChange?(self)
         try fetchedResultsController.performFetch(predicate: predicate)
-        updateResult()
+        updateResult(report: false)
     }
 
     public func resultTyped<T: ManagedEntity>() -> T? {
@@ -61,13 +59,15 @@ private extension SingleObjectFetchedResultController {
             guard let actualSelf = self else {
                 return
             }
-            actualSelf.updateResult()
+            actualSelf.updateResult(report: true)
         }
     }
 
-    func updateResult() {
+    func updateResult(report: Bool) {
         defer {
-            didChange?(self)
+            if report {
+                didChange?(self)
+            }
         }
 
         guard fetchedResultsController.numberOfSections() > resultIndexPath.section,
