@@ -3,11 +3,11 @@
 //
 //
 
-import CoreData
+@preconcurrency import CoreData
 import Shakuro_CommonTypes
 
 /// The main object that manages Core Data stack and encapsulates helper methods for interaction with Core Data objects
-public class PoliteCoreStorage {
+public final class PoliteCoreStorage: Sendable {
 
     public enum PCError: Int, Error {
 
@@ -54,7 +54,7 @@ public class PoliteCoreStorage {
 
     /// Encapsulates initial setup parameters
     /// - Tag: PoliteCoreStorage.Configuration
-    public struct Configuration {
+    public struct Configuration: Sendable {
 
         /// A part of store directory name - "\(Configuration.sqliteStoreDirectoryPrefix).\(sqliteName)"
         public static let sqliteStoreDirectoryPrefix: String = "politeCoreStorage"
