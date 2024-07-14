@@ -19,6 +19,10 @@
 		2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
 		A3D6385C4B834D2A60F687AE /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED7FDC31F7D110F9C4B6032 /* Pods_PoliteCoreData_Framework.framework */; };
+		A5AC16B62C40E89F00A06E4D /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AC16B12C40E89F00A06E4D /* FetchedResultsController+LazyList.swift */; };
+		A5AC16B72C40E89F00A06E4D /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AC16B22C40E89F00A06E4D /* FetchedResultsController+Section.swift */; };
+		A5AC16B82C40E89F00A06E4D /* FetchedResultsController+WrappedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AC16B32C40E89F00A06E4D /* FetchedResultsController+WrappedResult.swift */; };
+		A5AC16B92C40E89F00A06E4D /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AC16B42C40E89F00A06E4D /* LazyList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +42,10 @@
 		17EBF21629796CAB00D98387 /* Shakuro_CommonTypes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Shakuro_CommonTypes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2497179528B8E60200028816 /* SimpleFetchedResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFetchedResultController.swift; sourceTree = "<group>"; };
 		6B9CC1AD28D864E000DE744A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		A5AC16B12C40E89F00A06E4D /* FetchedResultsController+LazyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+LazyList.swift"; sourceTree = "<group>"; };
+		A5AC16B22C40E89F00A06E4D /* FetchedResultsController+Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+Section.swift"; sourceTree = "<group>"; };
+		A5AC16B32C40E89F00A06E4D /* FetchedResultsController+WrappedResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+WrappedResult.swift"; sourceTree = "<group>"; };
+		A5AC16B42C40E89F00A06E4D /* LazyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
 		AED7FDC31F7D110F9C4B6032 /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BADEDCB089F6BBFEEAC6A343 /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
 		BE14F58278A57448D92D5635 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +106,7 @@
 				1741924E2886B86400161123 /* FetchedResultsController.swift */,
 				1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */,
 				2497179528B8E60200028816 /* SimpleFetchedResultController.swift */,
+				A5AC16B52C40E89F00A06E4D /* SwiftUI */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -109,6 +118,17 @@
 				BE14F58278A57448D92D5635 /* Pods-PoliteCoreData_Framework.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A5AC16B52C40E89F00A06E4D /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				A5AC16B12C40E89F00A06E4D /* FetchedResultsController+LazyList.swift */,
+				A5AC16B22C40E89F00A06E4D /* FetchedResultsController+Section.swift */,
+				A5AC16B32C40E89F00A06E4D /* FetchedResultsController+WrappedResult.swift */,
+				A5AC16B42C40E89F00A06E4D /* LazyList.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		C4AAF398C4DFEBF976570AFC /* Frameworks */ = {
@@ -230,10 +250,14 @@
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
+				A5AC16B82C40E89F00A06E4D /* FetchedResultsController+WrappedResult.swift in Sources */,
+				A5AC16B62C40E89F00A06E4D /* FetchedResultsController+LazyList.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
 				2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */,
 				174192552886B86400161123 /* FetchedResultsController.swift in Sources */,
+				A5AC16B92C40E89F00A06E4D /* LazyList.swift in Sources */,
+				A5AC16B72C40E89F00A06E4D /* FetchedResultsController+Section.swift in Sources */,
 				174192542886B86400161123 /* SingleObjectFetchedResultController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

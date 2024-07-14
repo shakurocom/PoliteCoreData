@@ -3,11 +3,11 @@
 //
 //
 
-import CoreData
+@preconcurrency import CoreData
 import Shakuro_CommonTypes
 
 /// The main object that manages Core Data stack and encapsulates helper methods for interaction with Core Data objects
-public class PoliteCoreStorage {
+public final class PoliteCoreStorage: Sendable {
 
     public enum PCError: Int, Error {
 
@@ -54,7 +54,7 @@ public class PoliteCoreStorage {
 
     /// Encapsulates initial setup parameters
     /// - Tag: PoliteCoreStorage.Configuration
-    public struct Configuration {
+    public struct Configuration: Sendable {
 
         /// A part of store directory name - "\(Configuration.sqliteStoreDirectoryPrefix).\(sqliteName)"
         public static let sqliteStoreDirectoryPrefix: String = "politeCoreStorage"
@@ -477,6 +477,11 @@ public extension PoliteCoreStorage {
 // MARK: Save/Create
 
 public extension PoliteCoreStorage {
+
+    @available(iOS 15.0, *)
+    func save(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Void) async throws {
+        try await saveContext(rootSavingContext, changesBlock: body)
+    }
 
     /// Performs block on private queue of saving context.
     ///
@@ -1024,6 +1029,26 @@ private extension PoliteCoreStorage {
     }
 
     // MARK: Helpers
+
+    @available(iOS 15.0, *)
+    private func saveContext(_ context: NSManagedObjectContext,
+                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil) async throws {
+        try await context.perform(schedule: .enqueued, {
+            context.reset()
+            do {
+                try changesBlock?(context)
+                guard context.hasChanges else {
+                    return
+                }
+                try context.save()
+                context.reset()
+            } catch let error {
+                context.reset()
+                assertionFailure("Could not save context \(error)")
+                throw error
+            }
+        })
+    }
 
     private func saveContext(_ context: NSManagedObjectContext,
                              changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil,
