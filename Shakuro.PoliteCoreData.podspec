@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name             = 'Shakuro.PoliteCoreData'
-    s.version          = '1.5.0'
+    s.version          = '1.5.1'
     s.summary          = 'PoliteCoreData'
     s.homepage         = 'https://github.com/shakurocom/PoliteCoreData'
     s.license          = { :type => "MIT", :file => "LICENSE.md" }
