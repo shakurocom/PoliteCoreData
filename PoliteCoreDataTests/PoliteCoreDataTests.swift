@@ -44,10 +44,10 @@ final class PoliteCoreDataTests: XCTestCase {
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelNameList([
-                "MigrationTestNames",
-                "MigrationTestNames_1",
-                "MigrationTestNames_2",
-                "MigrationTestNames_3"
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_1", customMappingModelName: "Model_v1_to_v2"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_2", customMappingModelName: "Model_v2_to_v3"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_3")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.modelName, toVersion.modelName) {
@@ -75,7 +75,13 @@ final class PoliteCoreDataTests: XCTestCase {
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestIds.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
-            try storage.migrate(migrationOrder: .modelIdentifiers) { fromVersion, toVersion in
+            let identifiers = PoliteCoreStorage.MigrationOrder.modelIdentifiers(items: [
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version2", customMappingModelName: "Model_v1_to_v2_ids"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version11"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version3", customMappingModelName: "Model_v2_to_v3_ids")
+            ])
+            try storage.migrate(migrationOrder: identifiers) { fromVersion, toVersion in
                 switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
                 case ("version1", "version2"):
                     self.V0_V1Success = true
@@ -102,10 +108,10 @@ final class PoliteCoreDataTests: XCTestCase {
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelIdentifierList([
-                "version1",
-                "version2",
-                "version3",
-                "version11"
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version2", customMappingModelName: "Model_v1_to_v2_ids"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version3", customMappingModelName: "Model_v2_to_v3_ids"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
