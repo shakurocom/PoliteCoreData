@@ -12,7 +12,7 @@ extension CDExampleEntity {
         return NSFetchRequest<CDExampleEntity>(entityName: "CDExampleEntity")
     }
 
-    @NSManaged public var identifier: String?
+    @NSManaged public var identifier: String
     @NSManaged public var createdAt: TimeInterval
     @NSManaged public var updatedAt: TimeInterval
 
