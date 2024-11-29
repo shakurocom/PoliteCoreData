@@ -8,13 +8,14 @@ import XCTest
 
 final class PoliteCoreDataTests: XCTestCase {
 
-    private let namesConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestNames", isExcludedFromBackup: true)
-    private let idsConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestIds", isExcludedFromBackup: true)
+    private let namesConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestNames", isExcludedFromBackup: true, isInMemory: false)
+    private let idsConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestIds", isExcludedFromBackup: true, isInMemory: false)
 
     // swiftlint:disable identifier_name
     private var V0_V1Success: Bool = false
     private var V1_V2Success: Bool = false
     private var V2_V3Success: Bool = false
+    // swiftlint:enable identifier_name
 
     override func setUp() {
         if FileManager.default.fileExists(atPath: namesConfig.sqliteStoreDirectoryURL.path) {
@@ -36,6 +37,7 @@ final class PoliteCoreDataTests: XCTestCase {
 
     // improve core data test inside library: implement test with testing actual steps and make several moms (valid and broken) and check if migrations actually started
 
+    @MainActor
     func testMigrationNamesList () {
         let configuration = namesConfig
         let storage = PoliteCoreStorage(configuration: configuration)
@@ -44,10 +46,10 @@ final class PoliteCoreDataTests: XCTestCase {
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelNameList([
-                "MigrationTestNames",
-                "MigrationTestNames_1",
-                "MigrationTestNames_2",
-                "MigrationTestNames_3"
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_1"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_2"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_3")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.modelName, toVersion.modelName) {
@@ -68,6 +70,7 @@ final class PoliteCoreDataTests: XCTestCase {
         XCTAssertTrue(V0_V1Success && V1_V2Success && V2_V3Success, "Migration failed")
     }
 
+    @MainActor
     func testMigrationIds() {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
@@ -75,18 +78,25 @@ final class PoliteCoreDataTests: XCTestCase {
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestIds.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
-            try storage.migrate(migrationOrder: .modelIdentifiers) { fromVersion, toVersion in
-                switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
-                case ("version1", "version2"):
-                    self.V0_V1Success = true
-                case ("version2", "version3"):
-                    self.V1_V2Success = true
-                case ("version3", "version11"):
-                    self.V2_V3Success = true
-                default:
-                    XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
-                }
-            }
+            try storage.migrate(
+                migrationOrder: .modelIdentifiers(items: [
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version2"),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version3"),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
+                ]),
+                migrationStep: { fromVersion, toVersion in
+                    switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
+                    case ("version1", "version2"):
+                        self.V0_V1Success = true
+                    case ("version2", "version3"):
+                        self.V1_V2Success = true
+                    case ("version3", "version11"):
+                        self.V2_V3Success = true
+                    default:
+                        XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
+                    }
+                })
             try storage.setupStack(removeDBOnSetupFailed: false)
         } catch let error {
             XCTFail("Migration failed: \(error)")
@@ -94,6 +104,7 @@ final class PoliteCoreDataTests: XCTestCase {
         XCTAssertTrue(V0_V1Success && V1_V2Success && V2_V3Success, "Migration failed")
     }
 
+    @MainActor
     func testMigrationIdsList () {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
@@ -102,10 +113,10 @@ final class PoliteCoreDataTests: XCTestCase {
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelIdentifierList([
-                "version1",
-                "version2",
-                "version3",
-                "version11"
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version2"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version3"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {

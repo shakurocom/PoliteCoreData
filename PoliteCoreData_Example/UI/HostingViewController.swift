@@ -11,7 +11,9 @@ final class HostingViewController: UIViewController {
 
     private var storage: PoliteCoreStorage = {
         do {
-            let storage = PoliteCoreStorage(configuration: PoliteCoreStorage.Configuration(objectModelName: "CoreDataExample", isExcludedFromBackup: true))
+            let storage = PoliteCoreStorage(configuration: PoliteCoreStorage.Configuration(objectModelName: "CoreDataExample",
+                                                                                           isExcludedFromBackup: true,
+                                                                                           isInMemory: false))
             try storage.setupStack(removeDBOnSetupFailed: true)
             return storage
         } catch let error {

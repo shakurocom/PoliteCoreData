@@ -21,6 +21,7 @@ public final class PoliteCoreStorage: Sendable {
         case sourceMOMNotFound                  = 108
         case destinationMOMNotFound             = 109
         case momVersionNameDuplicated           = 110
+        case customMappingModelNotFound         = 111
 
         public func errorDescription() -> String {
             switch self {
@@ -44,7 +45,8 @@ public final class PoliteCoreStorage: Sendable {
                 return NSLocalizedString("Can't find destination mom with version identifier", comment: "Storage Error description")
             case .momVersionNameDuplicated:
                 return NSLocalizedString("Managed object model version name already exists. Two or more model versions have similar names.", comment: "Storage Error description")
-
+            case .customMappingModelNotFound:
+                return NSLocalizedString("Custom mapping model not found in bundle.", comment: "Storage Error description")
             }
         }
 
@@ -69,16 +71,29 @@ public final class PoliteCoreStorage: Sendable {
         /// The Bool value indicating whether the sqliteStoreDirectoryURL should be excluded from backup
         public let isExcludedFromBackup: Bool
 
+        public let allowPersistentHistoryTracking: Bool
+
+        public let allowPersistentStoreRemoteChangeNotificationPost: Bool
+
+        public let isInMemory: Bool
+
         /// Initializes Configuration
         ///
         /// - Parameter objectModelURL: The .xcdatamodeld file URL
         /// - Parameter sqliteStoreURL: The .sqlite file URL
         /// - Parameter isExcludedFromBackup: The Bool value indicating whether the sqliteStoreDirectoryURL should be excluded from backup
-        public init(objectModelURL: URL, sqliteStoreURL: URL, isExcludedFromBackup: Bool) {
+        public init(objectModelURL: URL,
+                    sqliteStoreURL: URL,
+                    isExcludedFromBackup: Bool,
+                    allowPersistentHistoryTracking: Bool = false,
+                    allowPersistentStoreRemoteChangeNotificationPost: Bool = false) {
             self.objectModelURL = objectModelURL
             self.sqliteStoreURL = sqliteStoreURL
             self.sqliteStoreDirectoryURL = sqliteStoreURL.deletingLastPathComponent()
             self.isExcludedFromBackup = isExcludedFromBackup
+            self.allowPersistentHistoryTracking = allowPersistentHistoryTracking
+            self.allowPersistentStoreRemoteChangeNotificationPost = allowPersistentStoreRemoteChangeNotificationPost
+            self.isInMemory = false
         }
 
         /// Initializes Configuration
@@ -87,10 +102,14 @@ public final class PoliteCoreStorage: Sendable {
         /// - Parameter isExcludedFromBackup: The Bool value indicating whether the sqliteStoreDirectoryURL should be excluded from backup
         /// - Parameter sqliteStoreFileName: The name of .sqlite file, pass nil to use objectModelName
         /// - Parameter sqliteStoreDirectoryPrefix: A part of store directory name - "\(Configuration.sqliteStoreDirectoryPrefix).\(sqliteName)". Configuration.sqliteStoreDirectoryPrefix by default
+        /// - parameter isInMemory:
         public init(objectModelName: String,
                     isExcludedFromBackup: Bool,
                     sqliteStoreFileName: String? = nil,
-                    sqliteStoreDirectoryPrefix: String = Configuration.sqliteStoreDirectoryPrefix) {
+                    sqliteStoreDirectoryPrefix: String = Configuration.sqliteStoreDirectoryPrefix,
+                    allowPersistentHistoryTracking: Bool = false,
+                    allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
+                    isInMemory: Bool) {
             let fileManager: FileManager = FileManager.default
             guard let rootDirURL: URL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first,
                   let modelURL = Bundle.main.url(forResource: objectModelName, withExtension: "momd") else {
@@ -99,26 +118,45 @@ public final class PoliteCoreStorage: Sendable {
             let sqliteName = sqliteStoreFileName ?? objectModelName
             let dirName = "\(sqliteStoreDirectoryPrefix).\(sqliteName)"
             let storeDirURL = rootDirURL.appendingPathComponent(dirName, isDirectory: true)
-            sqliteStoreDirectoryURL = storeDirURL
-            sqliteStoreURL = storeDirURL.appendingPathComponent("\(sqliteName).sqlite", isDirectory: false)
-            objectModelURL = modelURL
+            self.sqliteStoreDirectoryURL = storeDirURL
+            if isInMemory {
+                self.sqliteStoreURL = URL(fileURLWithPath: "memory://store")
+            } else {
+                self.sqliteStoreURL = storeDirURL.appendingPathComponent("\(sqliteName).sqlite", isDirectory: false)
+            }
+            self.objectModelURL = modelURL
             self.isExcludedFromBackup = isExcludedFromBackup
+            self.allowPersistentHistoryTracking = allowPersistentHistoryTracking
+            self.allowPersistentStoreRemoteChangeNotificationPost = allowPersistentStoreRemoteChangeNotificationPost
+            self.isInMemory = isInMemory
         }
+    }
+
+    public struct MigrationOrderItem: Sendable {
+
+        public let identifier: String
+        public let customMappingModelName: String?
+
+        public init(identifier: String, customMappingModelName: String? = nil) {
+            self.identifier = identifier
+            self.customMappingModelName = customMappingModelName
+        }
+
     }
 
     /// Specifies the order of model versions to migrate.
     public enum MigrationOrder: Sendable {
 
         /// A model identifiers sorted in ascending order.
-        case modelIdentifiers
+        case modelIdentifiers(items: [MigrationOrderItem])
 
         /// A model identifiers the order is defined by position in array
-        case modelIdentifierList([String])
+        case modelIdentifierList([MigrationOrderItem])
 
         /// A model names the order is defined by position in array
         /** - warning: Compatible versions of models with different names are considered the same,
          to avoid this behavior, add model version identifiers to such models */
-        case modelNameList([String])
+        case modelNameList([MigrationOrderItem])
 
     }
 
@@ -145,6 +183,8 @@ public final class PoliteCoreStorage: Sendable {
 
         /// A file name of model without extension
         public let modelName: String
+
+        public var customMappingModelName: String?
 
         public init(_ modelURL: URL, modelName: String? = nil) throws {
             self.modelURL = modelURL
@@ -211,6 +251,8 @@ public final class PoliteCoreStorage: Sendable {
     ///   - migrationStep: Executed when simple migration step between neighboring models is done (e.g. 1 -> 2, 2 -> 3, 3 -> 4 ...).
     ///                    Additional data save can be performed here.
     public func migrate(migrationOrder: MigrationOrder,
+                        allowPersistentHistoryTracking: Bool = false,
+                        allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
                         migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion,
                                                    _ toVersion: MigrationModelVersion) -> Void)?) throws {
         let storeURL = configuration.sqliteStoreURL
@@ -248,7 +290,12 @@ public final class PoliteCoreStorage: Sendable {
         for index in 0..<(migrationMap.count - 1) {
             let source = migrationMap[index]
             let destination = migrationMap[index + 1]
-            try migrateStore(storeURL: storeURL, sourceMOM: source.model, destinationMOM: destination.model)
+            try migrateStore(storeURL: storeURL,
+                             sourceMOM: source.model,
+                             destinationMOM: destination.model,
+                             customMappingModelName: source.customMappingModelName,
+                             allowPersistentHistoryTracking: allowPersistentHistoryTracking,
+                             allowPersistentStoreRemoteChangeNotificationPost: allowPersistentStoreRemoteChangeNotificationPost)
             migrationStep?(source, destination)
         }
     }
@@ -261,12 +308,17 @@ public final class PoliteCoreStorage: Sendable {
     ///   - completion: executed when migration finished with result
     @MainActor
     public func migrate(migrationOrder: MigrationOrder,
+                        allowPersistentHistoryTracking: Bool = false,
+                        allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
                         migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
-                        completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
+                        completion: @MainActor @Sendable @escaping (Result<Void, Error>) -> Void) {
         Task(operation: {
             var error: Error?
             do {
-                try self.migrate(migrationOrder: migrationOrder, migrationStep: migrationStep)
+                try self.migrate(migrationOrder: migrationOrder,
+                                 allowPersistentHistoryTracking: allowPersistentHistoryTracking,
+                                 allowPersistentStoreRemoteChangeNotificationPost: allowPersistentStoreRemoteChangeNotificationPost,
+                                 migrationStep: migrationStep)
             } catch let errorActual {
                 error = errorActual
             }
@@ -320,14 +372,22 @@ public final class PoliteCoreStorage: Sendable {
     /// Calls reset() on main queue context
     @MainActor
     public func resetMainQueueContext() {
-        mainQueueContext.performAndWait { () -> Void in
+        if Thread.isMainThread {
+            // look on PoliteCoreStorage -> saveContextAndWait func
+            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
+        }
+        mainQueueContext.performAndWait { () -> Void in // TODO: implement replace performAndWait with async
             self.mainQueueContext.reset()
         }
     }
 
     /// Calls reset() on private queue rootSavingContext
     public func resetRootSavingContext() {
-        rootSavingContext.performAndWait { () -> Void in
+        if Thread.isMainThread {
+            // look on PoliteCoreStorage -> saveContextAndWait func
+            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
+        }
+        rootSavingContext.performAndWait { () -> Void in // TODO: implement replace performAndWait with async
             self.rootSavingContext.reset()
         }
     }
@@ -397,11 +457,12 @@ public extension PoliteCoreStorage {
                                                                predicate: NSPredicate? = nil,
                                                                sectionNameKeyPath: String? = nil,
                                                                cacheName: String? = nil,
+                                                               fetchBatchSize: Int? = nil,
                                                                relationshipKeyPathsForPrefetching: [String]? = nil,
                                                                configureRequest: ((_ request: NSFetchRequest<T>) -> Void)?) -> NSFetchedResultsController<T> {
         assert(Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
         let request = createRequest(entityType: entityType, sortDescriptors: sortDescriptors, predicate: predicate)
-        request.fetchBatchSize = Constant.defaultBatchSize
+        request.fetchBatchSize = fetchBatchSize ?? Constant.defaultBatchSize
         request.returnsObjectsAsFaults = false
         request.includesPropertyValues = true
         request.relationshipKeyPathsForPrefetching = relationshipKeyPathsForPrefetching
@@ -432,6 +493,10 @@ public extension PoliteCoreStorage {
 // MARK: Save/Create
 
 public extension PoliteCoreStorage {
+
+    func save(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Void) async throws {
+        try await saveContext(rootSavingContext, changesBlock: body)
+    }
 
     /// Performs block on private queue of saving context.
     ///
@@ -530,24 +595,43 @@ public extension PoliteCoreStorage {
     /// - Parameters:
     ///   - body: A closure that takes a context as a parameter.
     /// - Tag: fetchWithBlock
-    func fetch(_ body: @escaping ((_ context: NSManagedObjectContext) -> Void)) { // TODO: throwing?
+    func fetch(_ body: @escaping ((_ context: NSManagedObjectContext) throws -> Void)) throws {
         let fetchContext: NSManagedObjectContext = concurrentFetchContext
-        let fetchBlock = { () -> Void in
-            body(fetchContext)
-            fetchContext.reset()
+        var encounteredError: Error?
+        fetchContext.perform({ () -> Void in
+            do {
+                try body(fetchContext)
+                fetchContext.reset()
+            } catch let error {
+                encounteredError = error
+                fetchContext.reset()
+                assertionFailure("Could not fetch: \(error)")
+            }
+        })
+        if let error = encounteredError {
+            throw error
         }
-        fetchContext.perform(fetchBlock)
     }
 
     /// Synchronous variant of [save](x-source-tag://fetchWithBlock)
     /// - Tag: fetchWithBlockAndWait
-    func fetchAndWait(_ body: @escaping ((_ context: NSManagedObjectContext) -> Void)) { // TODO: throwing?
+    func fetchAndWait(_ body: @escaping ((_ context: NSManagedObjectContext) throws -> Void)) throws {
         let fetchContext: NSManagedObjectContext = concurrentFetchContext
-        let fetchBlock = { () -> Void in
-            body(fetchContext)
-            fetchContext.reset()
+        var encounteredError: Error?
+        // TODO: implement replace performAndWait with async
+        fetchContext.performAndWait({ () -> Void in
+            do {
+                try body(fetchContext)
+                fetchContext.reset()
+            } catch let error {
+                encounteredError = error
+                fetchContext.reset()
+                assertionFailure("Could not fetch: \(error)")
+            }
+        })
+        if let error = encounteredError {
+            throw error
         }
-        fetchContext.performAndWait(fetchBlock)
     }
 
     /// Returns entity for the specified objectID or nil if entity does not exist.
@@ -630,6 +714,20 @@ public extension PoliteCoreStorage {
         }
     }
 
+    func fetchPersistentHistoryTransactionsForLastMinute() throws -> [NSPersistentHistoryTransaction] {
+        var transactions: [NSPersistentHistoryTransaction] = []
+        try fetchAndWait({ (context) in
+            let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: Date(timeIntervalSinceNow: -60))
+            guard let historyResult = try? context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
+                  let historyTransactions = historyResult.result as? [NSPersistentHistoryTransaction]
+            else {
+                fatalError("Could not convert history result to transactions.")
+            }
+            transactions = historyTransactions
+        })
+        return transactions
+    }
+
 }
 
 // MARK: - Private
@@ -641,7 +739,9 @@ private extension PoliteCoreStorage {
     @MainActor
     private func setupCoreDataStack(removeOldDB: Bool) throws {
         setupCoreDataContexts()
-        makeRootStorageDirectory(removeOldDB: removeOldDB)
+        if !configuration.isInMemory {
+            makeRootStorageDirectory(removeOldDB: removeOldDB)
+        }
         try addPersistentStores()
     }
 
@@ -671,7 +771,12 @@ private extension PoliteCoreStorage {
         // Setup context
         self.rootSavingContext.mergePolicy = NSMergePolicy.overwrite
         self.rootSavingContext.undoManager = nil
-        self.rootSavingContext.persistentStoreCoordinator = self.persistentStoreCoordinatorWorker
+        if configuration.isInMemory {
+            // same store, because they are created in memory, so thay can not sync by URL
+            self.rootSavingContext.persistentStoreCoordinator = self.persistentStoreCoordinatorMain
+        } else {
+            self.rootSavingContext.persistentStoreCoordinator = self.persistentStoreCoordinatorWorker
+        }
 
         self.concurrentFetchContext.parent = self.rootSavingContext
         self.concurrentFetchContext.undoManager = nil
@@ -684,17 +789,37 @@ private extension PoliteCoreStorage {
 
     private func addPersistentStores() throws {
         let storeURL = configuration.sqliteStoreURL
-        let options: [AnyHashable: Any] = [NSMigratePersistentStoresAutomaticallyOption: true,
+        var options: [AnyHashable: Any] = [NSMigratePersistentStoresAutomaticallyOption: true,
                                                  NSInferMappingModelAutomaticallyOption: true]
-        // TODO: implement addPersistentStore is deprecated + why addPersistentStores() is called in background
-        try persistentStoreCoordinatorMain.addPersistentStore(ofType: NSSQLiteStoreType,
-                                                              configurationName: nil,
-                                                              at: storeURL,
-                                                              options: options)
-        try persistentStoreCoordinatorWorker.addPersistentStore(ofType: NSSQLiteStoreType,
-                                                                configurationName: nil,
-                                                                at: storeURL,
-                                                                options: options)
+        if configuration.isInMemory {
+            try persistentStoreCoordinatorMain.addPersistentStore(ofType: NSInMemoryStoreType,
+                                                                  configurationName: nil,
+                                                                  at: storeURL,
+                                                                  options: options)
+        } else {
+            try persistentStoreCoordinatorMain.addPersistentStore(ofType: NSSQLiteStoreType,
+                                                                  configurationName: nil,
+                                                                  at: storeURL,
+                                                                  options: options)
+        }
+        // https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
+        if configuration.allowPersistentHistoryTracking {
+            options[NSPersistentHistoryTrackingKey] = true
+        }
+        if configuration.allowPersistentStoreRemoteChangeNotificationPost {
+            options[NSPersistentStoreRemoteChangeNotificationPostOptionKey] = true
+        }
+        if configuration.isInMemory {
+            try persistentStoreCoordinatorWorker.addPersistentStore(ofType: NSInMemoryStoreType,
+                                                                    configurationName: nil,
+                                                                    at: storeURL,
+                                                                    options: options)
+        } else {
+            try persistentStoreCoordinatorWorker.addPersistentStore(ofType: NSSQLiteStoreType,
+                                                                    configurationName: nil,
+                                                                    at: storeURL,
+                                                                    options: options)
+        }
     }
 
     // MARK: Migration
@@ -713,9 +838,10 @@ private extension PoliteCoreStorage {
         }
 
         switch order {
-        case .modelIdentifiers:
+        case .modelIdentifiers(let items):
             let modelVersions = try modelVersions(modelsURLs: modelsURLs,
-                                                  storeMetadata: storeMetadata)
+                                                  storeMetadata: storeMetadata,
+                                                  items: items)
             let destIdentifier = try destinationVersion.validVersionIdentifier
             let sourceIdentifier = try modelVersions.storeVersion.validVersionIdentifier
             let result: [MigrationModelVersion] = try modelVersions.versions.filter({ modelVersion in
@@ -734,60 +860,74 @@ private extension PoliteCoreStorage {
             })
             return result
 
-        case .modelIdentifierList(let list):
+        case .modelIdentifierList(let items):
             let versions = try modelVersionMap(modelsURLs: modelsURLs,
                                                storeMetadata: storeMetadata,
-                                               nameBased: false)
+                                               nameBased: false,
+                                               items: items)
             let storeVersion = versions.storeVersion
             let versionsMap = versions.versions
-            guard let indexOfStoreVersion = list.firstIndex(where: { $0 == storeVersion.versionIdentifier }) else {
+            guard let indexOfStoreVersion = items.firstIndex(where: { $0.identifier == storeVersion.versionIdentifier }) else {
                 throw PCError.sourceMOMNotFound
             }
-            let result: [MigrationModelVersion] = list[indexOfStoreVersion..<list.endIndex].compactMap({ versionsMap[$0] })
+            let result: [MigrationModelVersion] = items[indexOfStoreVersion..<items.endIndex].compactMap({ versionsMap[$0.identifier] })
             return result
 
-        case .modelNameList(let list):
+        case .modelNameList(let items):
             let versions = try modelVersionMap(modelsURLs: modelsURLs,
                                                storeMetadata: storeMetadata,
-                                               nameBased: true)
+                                               nameBased: true,
+                                               items: items)
             let storeVersion = versions.storeVersion
             let versionsMap = versions.versions
-            guard let indexOfStoreVersion = list.firstIndex(where: { $0 == storeVersion.modelName }) else {
+            guard let indexOfStoreVersion = items.firstIndex(where: { $0.identifier == storeVersion.modelName }) else {
                 throw PCError.sourceMOMNotFound
             }
-            let result: [MigrationModelVersion] = list[indexOfStoreVersion..<list.endIndex].compactMap({ versionsMap[$0] })
+            let result: [MigrationModelVersion] = items[indexOfStoreVersion..<items.endIndex].compactMap({ versionsMap[$0.identifier] })
             return result
         }
     }
 
-    private func modelVersionMap(modelsURLs: [URL],
-                                 storeMetadata: [String: Any],
-                                 nameBased: Bool) throws -> (storeVersion: MigrationModelVersion, versions: [String: MigrationModelVersion]) {
-        var storeVersion: MigrationModelVersion?
-        let storeVersionIdentifier = (storeMetadata["NSStoreModelVersionIdentifiers"] as? [String])?.first
-        let resultMap: [String: MigrationModelVersion] = try modelsURLs.reduce(into: [:], { (result, modelURL) in
-            let modelVersion = try MigrationModelVersion(modelURL)
-            let mapKey: String
-            mapKey = nameBased ? modelVersion.modelName : try modelVersion.validVersionIdentifier
-            guard result[mapKey] == nil else { throw PCError.momVersionIdentifierDuplicated }
-            if storeVersion == nil,
-               modelVersion.model.isConfiguration(withName: nil, compatibleWithStoreMetadata: storeMetadata),
-               storeVersionIdentifier == modelVersion.versionIdentifier {
-                storeVersion = modelVersion
+    private func modelVersionMap(
+        modelsURLs: [URL],
+        storeMetadata: [String: Any],
+        nameBased: Bool,
+        items: [PoliteCoreStorage.MigrationOrderItem]) throws -> (storeVersion: MigrationModelVersion, versions: [String: MigrationModelVersion]) {
+            var storeVersion: MigrationModelVersion?
+            let storeVersionIdentifier = (storeMetadata["NSStoreModelVersionIdentifiers"] as? [String])?.first
+            let resultMap: [String: MigrationModelVersion] = try modelsURLs.reduce(into: [:], { (result, modelURL) in
+                var modelVersion = try MigrationModelVersion(modelURL)
+                modelVersion.customMappingModelName = items.first(where: { (item) in
+                    return item.identifier == modelVersion.modelName || item.identifier == modelVersion.versionIdentifier
+                })?.customMappingModelName
+                let mapKey: String
+                mapKey = nameBased ? modelVersion.modelName : try modelVersion.validVersionIdentifier
+                guard result[mapKey] == nil else { throw PCError.momVersionIdentifierDuplicated }
+                if storeVersion == nil,
+                   modelVersion.model.isConfiguration(withName: nil, compatibleWithStoreMetadata: storeMetadata),
+                   storeVersionIdentifier == modelVersion.versionIdentifier {
+                    storeVersion = modelVersion
+                }
+                result[mapKey] = modelVersion
+            })
+            guard let storeVersion = storeVersion else {
+                throw PCError.sourceMOMNotFound
             }
-            result[mapKey] = modelVersion
-        })
-        guard let storeVersion = storeVersion else {
-            throw PCError.sourceMOMNotFound
+            return (storeVersion, resultMap)
         }
-        return (storeVersion, resultMap)
-    }
 
-    private func modelVersions(modelsURLs: [URL], storeMetadata: [String: Any]) throws -> (storeVersion: MigrationModelVersion, versions: [MigrationModelVersion]) {
+    private func modelVersions(
+        modelsURLs: [URL],
+        storeMetadata: [String: Any],
+        items: [PoliteCoreStorage.MigrationOrderItem]) throws -> (storeVersion: MigrationModelVersion, versions: [MigrationModelVersion]) {
         var storeVersion: MigrationModelVersion?
         let storeVersionIdentifier = (storeMetadata["NSStoreModelVersionIdentifiers"] as? [String])?.first
         let result: [MigrationModelVersion] = try modelsURLs.reduce(into: [], { (result, modelURL) in
-            let modelVersion = try MigrationModelVersion(modelURL)
+            var modelVersion = try MigrationModelVersion(modelURL)
+            modelVersion.customMappingModelName = try items.first(where: { (item) in
+                let validVersionIdentifier = try modelVersion.validVersionIdentifier
+                return item.identifier == validVersionIdentifier
+            })?.customMappingModelName
             if storeVersion == nil,
                modelVersion.model.isConfiguration(withName: nil, compatibleWithStoreMetadata: storeMetadata),
                storeVersionIdentifier == modelVersion.versionIdentifier {
@@ -801,7 +941,12 @@ private extension PoliteCoreStorage {
         return (storeVersion: storeVersion, result)
     }
 
-    private func migrateStore(storeURL: URL, sourceMOM: NSManagedObjectModel, destinationMOM: NSManagedObjectModel) throws {
+    private func migrateStore(storeURL: URL,
+                              sourceMOM: NSManagedObjectModel,
+                              destinationMOM: NSManagedObjectModel,
+                              customMappingModelName: String?,
+                              allowPersistentHistoryTracking: Bool,
+                              allowPersistentStoreRemoteChangeNotificationPost: Bool) throws {
         let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true, attributes: nil)
         defer {
@@ -809,8 +954,14 @@ private extension PoliteCoreStorage {
         }
         // find mapping model
         let mappingModel: NSMappingModel
-        if let customMapping = NSMappingModel(from: Bundle.allBundles, forSourceModel: sourceMOM, destinationModel: destinationMOM) {
-            mappingModel = customMapping
+        if let customMappingModelNameActual = customMappingModelName {
+            if let url = Bundle.main.url(forResource: customMappingModelNameActual, withExtension: "cdm"),
+               let customMapping = NSMappingModel(contentsOf: url) {
+                mappingModel = customMapping
+            } else {
+                debugPrint("Custom mapping modelNotFound: \(customMappingModelNameActual)")
+                throw PCError.customMappingModelNotFound
+            }
         } else {
             mappingModel = try NSMappingModel.inferredMappingModel(forSourceModel: sourceMOM, destinationModel: destinationMOM)
         }
@@ -818,21 +969,24 @@ private extension PoliteCoreStorage {
         let destinationURL = temporaryDirectory.appendingPathComponent(storeURL.lastPathComponent)
         let manager = NSMigrationManager(sourceModel: sourceMOM, destinationModel: destinationMOM)
         try autoreleasepool {
+            var options: [AnyHashable: Any] = [:]
+            if allowPersistentHistoryTracking {
+                options[NSPersistentHistoryTrackingKey] = true
+            }
+            if allowPersistentStoreRemoteChangeNotificationPost {
+                options[NSPersistentStoreRemoteChangeNotificationPostOptionKey] = true
+            }
             try manager.migrateStore(from: storeURL,
-                                     sourceType: NSSQLiteStoreType,
-                                     options: nil,
-                                     with: mappingModel,
-                                     toDestinationURL: destinationURL,
-                                     destinationType: NSSQLiteStoreType,
-                                     destinationOptions: nil)
+                                     type: .sqlite,
+                                     options: options,
+                                     mapping: mappingModel,
+                                     to: destinationURL,
+                                     type: .sqlite,
+                                     options: options)
         }
         // move migration result from temporary folder to destination folder
         let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: destinationMOM)
-        try persistentStoreCoordinator.replacePersistentStore(at: storeURL,
-                                                              destinationOptions: nil,
-                                                              withPersistentStoreFrom: destinationURL,
-                                                              sourceOptions: nil,
-                                                              ofType: NSSQLiteStoreType)
+        try persistentStoreCoordinator.replacePersistentStore(at: storeURL, withPersistentStoreFrom: destinationURL, type: .sqlite)
     }
 
     private func makeRootStorageDirectory(removeOldDB: Bool) {
@@ -870,8 +1024,27 @@ private extension PoliteCoreStorage {
     // MARK: Helpers
 
     private func saveContext(_ context: NSManagedObjectContext,
-                             changesBlock: (@Sendable (_ context: NSManagedObjectContext) throws -> Void)? = nil,
-                             completion: ( @escaping @Sendable (_ error: Error?) -> Void)) {
+                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil) async throws {
+        try await context.perform(schedule: .enqueued, {
+            context.reset()
+            do {
+                try changesBlock?(context)
+                guard context.hasChanges else {
+                    return
+                }
+                try context.save()
+                context.reset()
+            } catch let error {
+                context.reset()
+                assertionFailure("Could not save context \(error)")
+                throw error
+            }
+        })
+    }
+
+    private func saveContext(_ context: NSManagedObjectContext,
+                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil,
+                             completion: (@escaping @Sendable (_ error: Error?) -> Void)) {
         let performCompletionClosure: (_ error: Error?) -> Void = { (error: Error?) -> Void in
             (self.callbackQueue).async(execute: {
                 completion(error)
@@ -899,7 +1072,15 @@ private extension PoliteCoreStorage {
     private func saveContextAndWait(_ context: NSManagedObjectContext,
                                     changesBlock: (@Sendable (_ context: NSManagedObjectContext) throws -> Void)? = nil) throws {
         var saveError: Error?
-        context.performAndWait {
+//        if Thread.isMainThread {
+            // changesBlock will be executed in the calling thread
+            // so if performAndWait will be called on main thread changesBlock will be performed on main thread
+            // and fetched result controllers callbacks will be performed during context.save() inside performAndWait block
+            // this leads to blocked core data queue that can lead to loops or dead locks with external locks (like auth manager lock).
+            // https://stackoverflow.com/questions/11831946/nsmanagedobjectcontext-performblockandwait-doesnt-execute-on-background-thread
+//            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
+//        }
+        context.performAndWait { // TODO: implement replace performAndWait with async?
             context.reset()
             do {
                 try changesBlock?(context)
