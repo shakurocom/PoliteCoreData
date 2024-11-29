@@ -7,7 +7,7 @@ import CoreData
 import Shakuro_CommonTypes
 
 /// The main object that manages Core Data stack and encapsulates helper methods for interaction with Core Data objects
-public class PoliteCoreStorage {
+public final class PoliteCoreStorage: Sendable {
 
     public enum PCError: Int, Error {
 
@@ -52,7 +52,7 @@ public class PoliteCoreStorage {
 
     /// Encapsulates initial setup parameters
     /// - Tag: PoliteCoreStorage.Configuration
-    public struct Configuration {
+    public struct Configuration: Sendable {
 
         /// A part of store directory name - "\(Configuration.sqliteStoreDirectoryPrefix).\(sqliteName)"
         public static let sqliteStoreDirectoryPrefix: String = "politeCoreStorage"
@@ -107,7 +107,7 @@ public class PoliteCoreStorage {
     }
 
     /// Specifies the order of model versions to migrate.
-    public enum MigrationOrder {
+    public enum MigrationOrder: Sendable {
 
         /// A model identifiers sorted in ascending order.
         case modelIdentifiers
@@ -166,6 +166,7 @@ public class PoliteCoreStorage {
 
     private let rootSavingContext: NSManagedObjectContext!
     private let concurrentFetchContext: NSManagedObjectContext!
+    @MainActor
     private let mainQueueContext: NSManagedObjectContext!
     private let persistentStoreCoordinatorMain: NSPersistentStoreCoordinator!
     private let persistentStoreCoordinatorWorker: NSPersistentStoreCoordinator!
@@ -177,6 +178,7 @@ public class PoliteCoreStorage {
     /// - Parameters:
     ///   - configuration: The instance of [Configuration](x-source-tag://PoliteCoreStorage.Configuration) to use during setup
     /// - Returns: The new PoliteCoreStorage instance
+    @MainActor
     public init(configuration: Configuration) {
         guard let model = NSManagedObjectModel(contentsOf: configuration.objectModelURL) else {
             fatalError("Could not initialize database object model")
@@ -194,7 +196,9 @@ public class PoliteCoreStorage {
     }
 
     deinit {
-        removeObservers()
+        MainActor.assumeIsolated({
+            removeObservers()
+        })
     }
 
     // MARK: - Migration
@@ -205,7 +209,8 @@ public class PoliteCoreStorage {
     ///   - migrationStep: Executed when simple migration step between neighboring models is done (e.g. 1 -> 2, 2 -> 3, 3 -> 4 ...).
     ///                    Additional data save can be performed here.
     public func migrate(migrationOrder: MigrationOrder,
-                        migrationStep: ((_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)?) throws {
+                        migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion,
+                                                   _ toVersion: MigrationModelVersion) -> Void)?) throws {
         let storeURL = configuration.sqliteStoreURL
 
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
@@ -252,9 +257,10 @@ public class PoliteCoreStorage {
     ///   - migrationStep: Executed when simple migration step between neighboring models is done (e.g. 1 -> 2, 2 -> 3, 3 -> 4 ...).
     ///                    Additional data save can be performed here.
     ///   - completion: executed when migration finished with result
+    @MainActor
     public func migrate(migrationOrder: MigrationOrder,
-                        migrationStep: ((_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
-                        completion: @escaping (Result<Void, Error>) -> Void) {
+                        migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
+                        completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
             var error: Error?
             do {
@@ -278,6 +284,7 @@ public class PoliteCoreStorage {
     ///
     /// - Parameters:
     ///   - removeDBOnSetupFailed: Pass true to remove DB files and recreate from scratch in case of setup failed
+    @MainActor
     public func setupStack(removeDBOnSetupFailed: Bool) throws {
         do {
             try setupCoreDataStack(removeOldDB: false)
@@ -295,6 +302,7 @@ public class PoliteCoreStorage {
     /// - Parameters:
     ///   - removeDBOnSetupFailed: Pass true to remove DB files and recreate from scratch in case of setup failed
     ///   - completion: executed when setup finished with result
+    @MainActor
     public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         setupCoreDataStack(removeOldDB: false, completion: { (result) in
             if removeDBOnSetupFailed, case .failure = result {
@@ -308,6 +316,7 @@ public class PoliteCoreStorage {
     // MARK: - Maintenance
 
     /// Calls reset() on main queue context
+    @MainActor
     public func resetMainQueueContext() {
         mainQueueContext.performAndWait { () -> Void in
             self.mainQueueContext.reset()
@@ -335,6 +344,7 @@ public extension PoliteCoreStorage {
     /// - Parameter objectID: The NSManagedObjectID for the specified entity
     /// - Returns: An entity for the specified objectID or nil
     /// - Warning: To use on main queue only!
+    @MainActor
     func existingEntityInMainQueueContext<T: NSManagedObject>(objectID: NSManagedObjectID) -> T? {
         return existingEntity(objectID: objectID, context: mainQueueContext)
     }
@@ -347,6 +357,7 @@ public extension PoliteCoreStorage {
     ///   - predicate: NSPredicate object that describes entity
     /// - Returns: First found entity or nil
     /// - Warning: To use on main queue only!
+    @MainActor
     func findFirstInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate) -> T? {
         return findFirst(entityType: entityType, predicate: predicate, context: mainQueueContext)
     }
@@ -360,6 +371,7 @@ public extension PoliteCoreStorage {
     ///   - predicate: predicate to filter by
     /// - Returns: Array of entities
     /// - Warning: To use on main queue only!
+    @MainActor
     func findAllInMainQueueContext<T: NSManagedObject>(entityType: T.Type,
                                                        sortDescriptors: [NSSortDescriptor],
                                                        predicate: NSPredicate? = nil) -> [T]? {
@@ -377,6 +389,7 @@ public extension PoliteCoreStorage {
     ///   - configureRequest: A closure that takes a NSFetchRequest as a parameter, can be used to customize the request.
     /// - Returns: A NSFetchedResultsController instance
     /// - Warning: To use on main queue only!
+    @MainActor
     func mainQueueFetchedResultsController<T: NSManagedObject>(entityType: T.Type,
                                                                sortDescriptors: [NSSortDescriptor],
                                                                predicate: NSPredicate? = nil,
@@ -407,6 +420,7 @@ public extension PoliteCoreStorage {
     ///   - predicate: NSPredicate to filter by
     /// - Returns: Returns the number of entities.
     /// - Warning: To use on main queue only!
+    @MainActor
     func countForEntityInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate? = nil) -> Int {
         return count(entityType: entityType, context: mainQueueContext, predicate: predicate)
     }
@@ -464,7 +478,6 @@ public extension PoliteCoreStorage {
     ///   - entityType: A type of entity to create
     ///   - context: A context where entity should be created
     func create<T: NSManagedObject>(entityType: T.Type, context: NSManagedObjectContext) -> T {
-        assert(context !== mainQueueContext || Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
         let name = entityName(entityType: entityType)
         guard let entity: T = NSEntityDescription.insertNewObject(forEntityName: name, into: context) as? T else {
             fatalError("\(type(of: self)) - \(#function): . \(name)")
@@ -494,7 +507,6 @@ public extension PoliteCoreStorage {
     ///   - context: The target NSManagedObjectContext
     /// - Returns: Array of fetched objects.
     func execute<T: NSManagedObject>(request: NSFetchRequest<T>, context: NSManagedObjectContext) -> [T] {
-        assert(context !== mainQueueContext || Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
         var results: [T]?
         do {
             try results = context.fetch(request)
@@ -543,7 +555,6 @@ public extension PoliteCoreStorage {
     /// - Returns: Entity specified by objectID. If entity cannot be fetched, or does not exist, or cannot be faulted, it returns nil.
     /// - Tag: existingObjectWithID
     func existingEntity<T: NSManagedObject>(objectID: NSManagedObjectID, context: NSManagedObjectContext) -> T? {
-        assert(context !== mainQueueContext || Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
         var object: T?
         do {
             try object = context.existingObject(with: objectID) as? T
@@ -607,7 +618,6 @@ public extension PoliteCoreStorage {
     /// - Returns: Returns the number of entities.
     /// - Tag: countForFetchRequest
     func count<T: NSManagedObject>(request: NSFetchRequest<T>, context: NSManagedObjectContext) -> Int {
-        assert(context !== mainQueueContext || Thread.current.isMainThread, "Access to mainQueueContext in BG thread")
         do {
             let result: Int = try context.count(for: request)
             return result
@@ -625,12 +635,14 @@ private extension PoliteCoreStorage {
 
     // MARK: Setup
 
+    @MainActor
     private func setupCoreDataStack(removeOldDB: Bool) throws {
         setupCoreDataContexts()
         makeRootStorageDirectory(removeOldDB: removeOldDB)
         try addPersistentStores()
     }
 
+    @MainActor
     private func setupCoreDataStack(removeOldDB: Bool, completion: @escaping (_ result: Result<Void, Error>) -> Void) {
         setupCoreDataContexts()
         makeRootStorageDirectory(removeOldDB: removeOldDB)
@@ -642,8 +654,8 @@ private extension PoliteCoreStorage {
                 error = errorActual
             }
             DispatchQueue.main.async(execute: {
-                if let error = error {
-                    completion(.failure(error))
+                if let errorActual = error {
+                    completion(.failure(errorActual))
                 } else {
                     completion(.success(()))
                 }
@@ -651,6 +663,7 @@ private extension PoliteCoreStorage {
         })
     }
 
+    @MainActor
     private func setupCoreDataContexts() {
         // Setup context
         self.rootSavingContext.mergePolicy = NSOverwriteMergePolicy
@@ -854,7 +867,7 @@ private extension PoliteCoreStorage {
 
     private func saveContext(_ context: NSManagedObjectContext,
                              changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil,
-                             completion: @escaping ((_ error: Error?) -> Void)) {
+                             completion: @escaping @Sendable ((_ error: Error?) -> Void)) {
         let performCompletionClosure: (_ error: Error?) -> Void = { (error: Error?) -> Void in
             (self.callbackQueue).async(execute: {
                 completion(error)
@@ -880,7 +893,7 @@ private extension PoliteCoreStorage {
     }
 
     private func saveContextAndWait(_ context: NSManagedObjectContext,
-                                    changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil) throws {
+                                    changesBlock: (@Sendable (_ context: NSManagedObjectContext) throws -> Void)? = nil) throws {
         var saveError: Error?
         context.performAndWait {
             context.reset()
@@ -904,6 +917,7 @@ private extension PoliteCoreStorage {
 
     // MARK: - Observing
 
+    @MainActor
     private func addObservers() {
         if rootSavingContext == nil || mainQueueContext == nil {
             return
@@ -916,6 +930,7 @@ private extension PoliteCoreStorage {
         notificationCenter.addObserver(self, selector: #selector(contextWillSave(_:)), name: NSNotification.Name.NSManagedObjectContextWillSave, object: concurrentFetchContext)
     }
 
+    @MainActor
     private func removeObservers() {
         if rootSavingContext == nil || mainQueueContext == nil {
             return
