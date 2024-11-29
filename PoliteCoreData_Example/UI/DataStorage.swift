@@ -10,12 +10,14 @@ protocol DataStorage {
     func insertLastItem()
     func deleteLastItem()
     func deleteItem(_ identifier: String)
+    @MainActor
     func exampleFetchedResultController() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity>
-
-    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> // FetchableRequest<ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>>
+    @MainActor
+    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity>
 }
 
 extension PoliteCoreStorage: DataStorage {
+
     func insertLastItem() {
         let item = ExampleEntity()
         save({ (context) in
@@ -25,8 +27,8 @@ extension PoliteCoreStorage: DataStorage {
     }
 
     func deleteLastItem() {
-        let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
         save({ (context) in
+            let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
             if let cdItem = self.findAll(entityType: CDExampleEntity.self, context: context, sortDescriptors: sortDescriptor).last {
                 context.delete(cdItem)
             }
@@ -41,23 +43,25 @@ extension PoliteCoreStorage: DataStorage {
         }, completion: { _ in })
     }
 
+    @MainActor
     func exampleFetchedResultController() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> {
         let controller = mainQueueFetchedResultsController(
             entityType: CDExampleEntity.self,
             sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)],
             configureRequest: { (request) in
                 debugPrint(request)
-        })
+            })
         return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
 
+    @MainActor
     func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> {
         let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
-        let controller = mainQueueFetchedResultsController(
-            entityType: CDExampleEntity.self,
-            sortDescriptors: sortDescriptor,
-            configureRequest: nil)
+        let controller = mainQueueFetchedResultsController(entityType: CDExampleEntity.self,
+                                                           sortDescriptors: sortDescriptor,
+                                                           configureRequest: nil)
 
         return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
+
 }

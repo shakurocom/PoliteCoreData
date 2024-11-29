@@ -3,7 +3,7 @@
 //
 //
 
-import CoreData
+@preconcurrency import CoreData // TODO: implement - add actors for contexts? (according to docs context should have 1 queue)
 import Shakuro_CommonTypes
 
 /// The main object that manages Core Data stack and encapsulates helper methods for interaction with Core Data objects
@@ -172,6 +172,8 @@ public final class PoliteCoreStorage: Sendable {
     private let persistentStoreCoordinatorWorker: NSPersistentStoreCoordinator!
     private let classToEntityNameMap: [String: String]!
     private let callbackQueue: DispatchQueue
+    @MainActor
+    private var notificationsTask: Task<(), Never>?
 
     /// PoliteCoreStorage instance initialization according to given configuration
     ///
@@ -261,14 +263,14 @@ public final class PoliteCoreStorage: Sendable {
     public func migrate(migrationOrder: MigrationOrder,
                         migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
                         completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+        Task(operation: {
             var error: Error?
             do {
                 try self.migrate(migrationOrder: migrationOrder, migrationStep: migrationStep)
             } catch let errorActual {
                 error = errorActual
             }
-            DispatchQueue.main.async(execute: {
+            Task(operation: { @MainActor in
                 if let errorActual = error {
                     completion(.failure(errorActual))
                 } else {
@@ -437,13 +439,14 @@ public extension PoliteCoreStorage {
     ///   - body: A closure that takes a context as a parameter. Will be executed on private context queue. Caller could apply any changes to DB in it. At the end of execution context will be saved.
     ///   - completion: A closure that takes a saving error as a parameter. Will be performed after saving context.
     /// - Tag: saveWithBlock
-    func save(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Void, completion: @escaping ((_ error: Error?) -> Void)) {
+    func save(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Void,
+              completion: @escaping @Sendable (_ error: Error?) -> Void) {
         saveContext(rootSavingContext, changesBlock: body, completion: completion)
     }
 
     /// Synchronous variant of [save](x-source-tag://saveWithBlock)
     /// - Tag: saveWithBlockAndWait
-    func saveAndWait(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Void) throws {
+    func saveAndWait(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Void) throws {
         try saveContextAndWait(rootSavingContext, changesBlock: body)
     }
 
@@ -646,14 +649,14 @@ private extension PoliteCoreStorage {
     private func setupCoreDataStack(removeOldDB: Bool, completion: @escaping (_ result: Result<Void, Error>) -> Void) {
         setupCoreDataContexts()
         makeRootStorageDirectory(removeOldDB: removeOldDB)
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+        Task(operation: {
             var error: Error?
             do {
                 try self.addPersistentStores()
             } catch let errorActual {
                 error = errorActual
             }
-            DispatchQueue.main.async(execute: {
+            Task(operation: { @MainActor in
                 if let errorActual = error {
                     completion(.failure(errorActual))
                 } else {
@@ -666,7 +669,7 @@ private extension PoliteCoreStorage {
     @MainActor
     private func setupCoreDataContexts() {
         // Setup context
-        self.rootSavingContext.mergePolicy = NSOverwriteMergePolicy
+        self.rootSavingContext.mergePolicy = NSMergePolicy.overwrite
         self.rootSavingContext.undoManager = nil
         self.rootSavingContext.persistentStoreCoordinator = self.persistentStoreCoordinatorWorker
 
@@ -683,6 +686,7 @@ private extension PoliteCoreStorage {
         let storeURL = configuration.sqliteStoreURL
         let options: [AnyHashable: Any] = [NSMigratePersistentStoresAutomaticallyOption: true,
                                                  NSInferMappingModelAutomaticallyOption: true]
+        // TODO: implement addPersistentStore is deprecated + why addPersistentStores() is called in background
         try persistentStoreCoordinatorMain.addPersistentStore(ofType: NSSQLiteStoreType,
                                                               configurationName: nil,
                                                               at: storeURL,
@@ -866,8 +870,8 @@ private extension PoliteCoreStorage {
     // MARK: Helpers
 
     private func saveContext(_ context: NSManagedObjectContext,
-                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil,
-                             completion: @escaping @Sendable ((_ error: Error?) -> Void)) {
+                             changesBlock: (@Sendable (_ context: NSManagedObjectContext) throws -> Void)? = nil,
+                             completion: ( @escaping @Sendable (_ error: Error?) -> Void)) {
         let performCompletionClosure: (_ error: Error?) -> Void = { (error: Error?) -> Void in
             (self.callbackQueue).async(execute: {
                 completion(error)
@@ -924,10 +928,39 @@ private extension PoliteCoreStorage {
         }
         removeObservers()
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(rootSavingContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: rootSavingContext)
-        notificationCenter.addObserver(self, selector: #selector(contextWillSave(_:)), name: NSNotification.Name.NSManagedObjectContextWillSave, object: rootSavingContext)
-        notificationCenter.addObserver(self, selector: #selector(contextWillSave(_:)), name: NSNotification.Name.NSManagedObjectContextWillSave, object: mainQueueContext)
-        notificationCenter.addObserver(self, selector: #selector(contextWillSave(_:)), name: NSNotification.Name.NSManagedObjectContextWillSave, object: concurrentFetchContext)
+        notificationsTask = Task(operation: { @MainActor [weak self] in
+            let notificationsData = notificationCenter.notifications(named: NSNotification.Name.NSManagedObjectContextDidSave, object: nil)
+                .map({ NotificationData(name: $0.name, object: $0.object, userInfo: $0.userInfo) })
+            for await notificationData in notificationsData {
+                guard let context = notificationData.object as? NSManagedObjectContext, context === self?.rootSavingContext else {
+                    return
+                }
+                let mainQueueContext = self?.mainQueueContext
+                if let updatedObjects = notificationData.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
+                    for object in updatedObjects {
+                        do {
+                            try mainQueueContext?.existingObject(with: object.objectID).willAccessValue(forKey: nil)
+                        } catch {
+                            // do nothing
+                        }
+                    }
+                }
+                let notification = Notification(name: notificationData.name, object: notificationData.object, userInfo: notificationData.userInfo)
+                mainQueueContext?.mergeChanges(fromContextDidSave: notification)
+            }
+        })
+        notificationCenter.addObserver(self,
+                                       selector: #selector(contextWillSave(_:)),
+                                       name: NSNotification.Name.NSManagedObjectContextWillSave,
+                                       object: rootSavingContext)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(contextWillSave(_:)),
+                                       name: NSNotification.Name.NSManagedObjectContextWillSave,
+                                       object: mainQueueContext)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(contextWillSave(_:)),
+                                       name: NSNotification.Name.NSManagedObjectContextWillSave,
+                                       object: concurrentFetchContext)
     }
 
     @MainActor
@@ -935,34 +968,11 @@ private extension PoliteCoreStorage {
         if rootSavingContext == nil || mainQueueContext == nil {
             return
         }
+        notificationsTask?.cancel()
         let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self, name: NSNotification.Name.NSManagedObjectContextDidSave, object: rootSavingContext)
         notificationCenter.removeObserver(self, name: NSNotification.Name.NSManagedObjectContextWillSave, object: rootSavingContext)
         notificationCenter.removeObserver(self, name: NSNotification.Name.NSManagedObjectContextWillSave, object: mainQueueContext)
         notificationCenter.removeObserver(self, name: NSNotification.Name.NSManagedObjectContextWillSave, object: concurrentFetchContext)
-    }
-
-    @objc
-    private func rootSavingContextDidSave(_ notification: Notification) {
-        guard let context = notification.object as? NSManagedObjectContext, context === rootSavingContext else {
-            return
-        }
-        if Thread.isMainThread {
-            if let updatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
-                for object in updatedObjects {
-                    do {
-                        try mainQueueContext.existingObject(with: object.objectID).willAccessValue(forKey: nil)
-                    } catch {
-                        // do nothing
-                    }
-                }
-            }
-            mainQueueContext.mergeChanges(fromContextDidSave: notification)
-        } else {
-            DispatchQueue.main.async(execute: { () -> Void in
-                self.rootSavingContextDidSave(notification)
-            })
-        }
     }
 
     @objc
@@ -979,4 +989,12 @@ private extension PoliteCoreStorage {
         }
     }
 
+}
+
+// Notification is not Sendable because userInfo contains Any. To fix compiler error we use @unchecked Sendable.
+// We should check interfaces in new iOS releases.
+private struct NotificationData: @unchecked Sendable {
+    let name: Notification.Name
+    let object: Any?
+    let userInfo: [AnyHashable: Any]?
 }

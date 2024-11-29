@@ -7,7 +7,7 @@ import UIKit
 import PoliteCoreData_Framework
 import Shakuro_CommonTypes
 
-class HostingViewController: UIViewController {
+final class HostingViewController: UIViewController {
 
     private var storage: PoliteCoreStorage = {
         do {
@@ -19,12 +19,10 @@ class HostingViewController: UIViewController {
         }
     }()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }
 
 private extension HostingViewController {
+
     @IBAction private func uiKitTapped() {
         navigationController?.setViewControllers([ExampleCoreDataViewController.instantiate(storage)], animated: false)
     }
@@ -33,4 +31,5 @@ private extension HostingViewController {
         let swiftUIViewController = UIHostingController(rootView: SwiftUIView(storage: storage))
         navigationController?.setViewControllers([swiftUIViewController], animated: false)
     }
+
 }

@@ -21,13 +21,12 @@
 		2693C42F2AC446C200ED7107 /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */; };
 		269712C0299C7D7400756DA4 /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712BF299C7D7400756DA4 /* LazyList.swift */; };
 		269712C4299CE19C00756DA4 /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */; };
+		6B0A49AD312717359427E433 /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
-		D8FAE3F4D47D2B2DE59AA2FA /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		06B87AF015CDEB65BB4125EA /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
-		0864DDFAF77567294BCD10A7 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
+		122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1741921B2886AD2A00161123 /* PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1741921E2886AD2A00161123 /* PoliteCoreData_Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoliteCoreData_Framework.h; sourceTree = "<group>"; };
 		174192252886AD9600161123 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -46,8 +45,9 @@
 		2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+Section.swift"; sourceTree = "<group>"; };
 		269712BF299C7D7400756DA4 /* LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
 		269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+LazyList.swift"; sourceTree = "<group>"; };
-		4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B9CC1AD28D864E000DE744A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		732164097EC09D68C9C3018E /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
+		BB5413D26A42DB091BF1DC88 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8FAE3F4D47D2B2DE59AA2FA /* Pods_PoliteCoreData_Framework.framework in Frameworks */,
+				6B0A49AD312717359427E433 /* Pods_PoliteCoreData_Framework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +73,7 @@
 				1741921D2886AD2A00161123 /* PoliteCoreData_Framework */,
 				1741921C2886AD2A00161123 /* Products */,
 				174192482886B86400161123 /* Source */,
-				40D30B728EB52A66633C289D /* Frameworks */,
+				42735635D43DF0EF17BA21C4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -121,10 +121,10 @@
 			path = SwiftUI;
 			sourceTree = "<group>";
 		};
-		40D30B728EB52A66633C289D /* Frameworks */ = {
+		42735635D43DF0EF17BA21C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4A722859BDC26AA7364D81EE /* Pods_PoliteCoreData_Framework.framework */,
+				122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -132,8 +132,8 @@
 		58804367AB5E58605F4B0367 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				06B87AF015CDEB65BB4125EA /* Pods-PoliteCoreData_Framework.debug.xcconfig */,
-				0864DDFAF77567294BCD10A7 /* Pods-PoliteCoreData_Framework.release.xcconfig */,
+				732164097EC09D68C9C3018E /* Pods-PoliteCoreData_Framework.debug.xcconfig */,
+				BB5413D26A42DB091BF1DC88 /* Pods-PoliteCoreData_Framework.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -156,7 +156,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 174192222886AD2B00161123 /* Build configuration list for PBXNativeTarget "PoliteCoreData_Framework" */;
 			buildPhases = (
-				937F46EF0BED4BCC6B887A26 /* [CP] Check Pods Manifest.lock */,
+				21F9B777BBE1C0666A0C1EE8 /* [CP] Check Pods Manifest.lock */,
 				174192162886AD2A00161123 /* Headers */,
 				174192172886AD2A00161123 /* Sources */,
 				174192182886AD2A00161123 /* Frameworks */,
@@ -216,7 +216,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		937F46EF0BED4BCC6B887A26 /* [CP] Check Pods Manifest.lock */ = {
+		21F9B777BBE1C0666A0C1EE8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -387,7 +387,7 @@
 		};
 		174192232886AD2B00161123 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 06B87AF015CDEB65BB4125EA /* Pods-PoliteCoreData_Framework.debug.xcconfig */;
+			baseConfigurationReference = 732164097EC09D68C9C3018E /* Pods-PoliteCoreData_Framework.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -402,6 +402,7 @@
 				INFOPLIST_FILE = PoliteCoreData_Framework/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -421,7 +422,7 @@
 		};
 		174192242886AD2B00161123 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0864DDFAF77567294BCD10A7 /* Pods-PoliteCoreData_Framework.release.xcconfig */;
+			baseConfigurationReference = BB5413D26A42DB091BF1DC88 /* Pods-PoliteCoreData_Framework.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -436,6 +437,7 @@
 				INFOPLIST_FILE = PoliteCoreData_Framework/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
