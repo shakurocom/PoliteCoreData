@@ -23,18 +23,18 @@
 		17DBBB69288EB4330076FE44 /* V2_to_V3_MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB67288EB4330076FE44 /* V2_to_V3_MigrationPolicy.swift */; };
 		17DBBB6A288EB4330076FE44 /* V1_to_V2_MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB68288EB4330076FE44 /* V1_to_V2_MigrationPolicy.swift */; };
 		17DBBB79288EB4730076FE44 /* MigrationTestIds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */; };
-		17DBBB7A288EB4730076FE44 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */; };
-		17DBBB7B288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB75288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel */; };
 		17DBBB7C288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB76288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel */; };
 		17DBBB7D288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB77288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel */; };
-		17DBBB7E288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */; };
-		17DBBB7F288EB4790076FE44 /* MigrationTestIds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */; };
-		17DBBB80288EB47C0076FE44 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */; };
 		17F226902938C33600D604D2 /* HostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F2268F2938C33600D604D2 /* HostingViewController.swift */; };
 		17F226922938C69700D604D2 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F226912938C69700D604D2 /* SwiftUIView.swift */; };
 		269712C2299CDB5400756DA4 /* ExampleCoreDataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C1299CDB5400756DA4 /* ExampleCoreDataInteractor.swift */; };
 		26C590D8293ACA16002B611E /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C590D7293ACA16002B611E /* DataStorage.swift */; };
 		853405BAB107125E2950A6CC /* Pods_PoliteCoreData_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1878DC54E33B1420D93B8314 /* Pods_PoliteCoreData_Example.framework */; };
+		A541B2EA2CFD670100D0F087 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A541B2E82CFD670100D0F087 /* MigrationTestNames.xcdatamodeld */; };
+		A541B2F52CFD70B700D0F087 /* MigrationTestIds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */; };
+		A541B2F62CFD70BF00D0F087 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A541B2E82CFD670100D0F087 /* MigrationTestNames.xcdatamodeld */; };
+		A541B2FA2CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = A541B2F92CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel */; };
+		A541B2FC2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = A541B2FB2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,14 +83,8 @@
 		17DBBB6D288EB4730076FE44 /* MigrationTestIds_2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestIds_2.xcdatamodel; sourceTree = "<group>"; };
 		17DBBB6E288EB4730076FE44 /* MigrationTestIds.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestIds.xcdatamodel; sourceTree = "<group>"; };
 		17DBBB6F288EB4730076FE44 /* MigrationTestIds_1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestIds_1.xcdatamodel; sourceTree = "<group>"; };
-		17DBBB71288EB4730076FE44 /* MigrationTestNames_1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_1.xcdatamodel; sourceTree = "<group>"; };
-		17DBBB72288EB4730076FE44 /* MigrationTestNames.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames.xcdatamodel; sourceTree = "<group>"; };
-		17DBBB73288EB4730076FE44 /* MigrationTestNames_2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_2.xcdatamodel; sourceTree = "<group>"; };
-		17DBBB74288EB4730076FE44 /* MigrationTestNames_3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_3.xcdatamodel; sourceTree = "<group>"; };
-		17DBBB75288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model_v1_to_v2.xcmappingmodel; sourceTree = "<group>"; };
 		17DBBB76288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model_v1_to_v2_ids.xcmappingmodel; sourceTree = "<group>"; };
 		17DBBB77288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model_v2_to_v3_ids.xcmappingmodel; sourceTree = "<group>"; };
-		17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model_v2_to_v3.xcmappingmodel; sourceTree = "<group>"; };
 		17F2268F2938C33600D604D2 /* HostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostingViewController.swift; sourceTree = "<group>"; };
 		17F226912938C69700D604D2 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		1878DC54E33B1420D93B8314 /* Pods_PoliteCoreData_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PoliteCoreData_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +92,12 @@
 		26C590D7293ACA16002B611E /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
 		5286CB1C69CA81888018D808 /* Pods-PoliteCoreData_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.release.xcconfig"; sourceTree = "<group>"; };
 		707F79F1CA4DC4283D66EACD /* Pods-PoliteCoreData_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Example.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Example/Pods-PoliteCoreData_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		A541B2E92CFD670100D0F087 /* MigrationTestNames.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames.xcdatamodel; sourceTree = "<group>"; };
+		A541B2EB2CFD67A000D0F087 /* MigrationTestNames_1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_1.xcdatamodel; sourceTree = "<group>"; };
+		A541B2F72CFD71DC00D0F087 /* MigrationTestNames_2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_2.xcdatamodel; sourceTree = "<group>"; };
+		A541B2F82CFD71EC00D0F087 /* MigrationTestNames_3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_3.xcdatamodel; sourceTree = "<group>"; };
+		A541B2F92CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MigrationTestNames_v1_to_v2.xcmappingmodel; sourceTree = "<group>"; };
+		A541B2FB2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MigrationTestNames_v2_to_v3.xcmappingmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,14 +166,14 @@
 			isa = PBXGroup;
 			children = (
 				17DBBB65288EB3EF0076FE44 /* PoliteCoreDataTests.swift */,
+				A541B2E82CFD670100D0F087 /* MigrationTestNames.xcdatamodeld */,
+				A541B2F92CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel */,
+				A541B2FB2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel */,
+				17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */,
+				17DBBB76288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel */,
+				17DBBB77288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel */,
 				17DBBB68288EB4330076FE44 /* V1_to_V2_MigrationPolicy.swift */,
 				17DBBB67288EB4330076FE44 /* V2_to_V3_MigrationPolicy.swift */,
-				17DBBB6B288EB4730076FE44 /* MigrationTestIds.xcdatamodeld */,
-				17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */,
-				17DBBB76288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel */,
-				17DBBB75288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel */,
-				17DBBB77288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel */,
-				17DBBB78288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel */,
 			);
 			path = PoliteCoreDataTests;
 			sourceTree = "<group>";
@@ -394,6 +394,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A541B2F62CFD70BF00D0F087 /* MigrationTestNames.xcdatamodeld in Sources */,
+				A541B2F52CFD70B700D0F087 /* MigrationTestIds.xcdatamodeld in Sources */,
 				17DBBB4B288EAD970076FE44 /* CDExampleEntity+CoreDataProperties.swift in Sources */,
 				17DBBB4E288EAD970076FE44 /* ExampleEntity.swift in Sources */,
 				17F226922938C69700D604D2 /* SwiftUIView.swift in Sources */,
@@ -402,11 +404,9 @@
 				17F226902938C33600D604D2 /* HostingViewController.swift in Sources */,
 				17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */,
 				17DBBB4C288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift in Sources */,
-				17DBBB80288EB47C0076FE44 /* MigrationTestNames.xcdatamodeld in Sources */,
 				269712C2299CDB5400756DA4 /* ExampleCoreDataInteractor.swift in Sources */,
 				17DBBB51288EAEB80076FE44 /* CoreDataExample.xcdatamodeld in Sources */,
 				174192352886B70A00161123 /* AppDelegate.swift in Sources */,
-				17DBBB7F288EB4790076FE44 /* MigrationTestIds.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,14 +415,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				17DBBB7D288EB4730076FE44 /* Model_v2_to_v3_ids.xcmappingmodel in Sources */,
+				A541B2FC2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel in Sources */,
 				17DBBB7C288EB4730076FE44 /* Model_v1_to_v2_ids.xcmappingmodel in Sources */,
+				A541B2FA2CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel in Sources */,
 				17DBBB6A288EB4330076FE44 /* V1_to_V2_MigrationPolicy.swift in Sources */,
-				17DBBB7E288EB4730076FE44 /* Model_v2_to_v3.xcmappingmodel in Sources */,
-				17DBBB7B288EB4730076FE44 /* Model_v1_to_v2.xcmappingmodel in Sources */,
 				17DBBB69288EB4330076FE44 /* V2_to_V3_MigrationPolicy.swift in Sources */,
 				17DBBB66288EB3EF0076FE44 /* PoliteCoreDataTests.swift in Sources */,
 				17DBBB79288EB4730076FE44 /* MigrationTestIds.xcdatamodeld in Sources */,
-				17DBBB7A288EB4730076FE44 /* MigrationTestNames.xcdatamodeld in Sources */,
+				A541B2EA2CFD670100D0F087 /* MigrationTestNames.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,15 +724,15 @@
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		17DBBB70288EB4730076FE44 /* MigrationTestNames.xcdatamodeld */ = {
+		A541B2E82CFD670100D0F087 /* MigrationTestNames.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				17DBBB71288EB4730076FE44 /* MigrationTestNames_1.xcdatamodel */,
-				17DBBB72288EB4730076FE44 /* MigrationTestNames.xcdatamodel */,
-				17DBBB73288EB4730076FE44 /* MigrationTestNames_2.xcdatamodel */,
-				17DBBB74288EB4730076FE44 /* MigrationTestNames_3.xcdatamodel */,
+				A541B2F82CFD71EC00D0F087 /* MigrationTestNames_3.xcdatamodel */,
+				A541B2F72CFD71DC00D0F087 /* MigrationTestNames_2.xcdatamodel */,
+				A541B2EB2CFD67A000D0F087 /* MigrationTestNames_1.xcdatamodel */,
+				A541B2E92CFD670100D0F087 /* MigrationTestNames.xcdatamodel */,
 			);
-			currentVersion = 17DBBB74288EB4730076FE44 /* MigrationTestNames_3.xcdatamodel */;
+			currentVersion = A541B2F82CFD71EC00D0F087 /* MigrationTestNames_3.xcdatamodel */;
 			path = MigrationTestNames.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

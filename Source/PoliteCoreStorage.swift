@@ -136,10 +136,14 @@ public final class PoliteCoreStorage: Sendable {
 
         public let identifier: String
         public let customMappingModelName: String?
+        public let customMappingModelBundle: Bundle?
 
-        public init(identifier: String, customMappingModelName: String? = nil) {
+        public init(identifier: String,
+                    customMappingModelName: String? = nil,
+                    customMappingModelBundle: Bundle? = nil) {
             self.identifier = identifier
             self.customMappingModelName = customMappingModelName
+            self.customMappingModelBundle = customMappingModelBundle
         }
 
     }
@@ -185,6 +189,7 @@ public final class PoliteCoreStorage: Sendable {
         public let modelName: String
 
         public var customMappingModelName: String?
+        public var customMappingModelBundle: Bundle?
 
         public init(_ modelURL: URL, modelName: String? = nil) throws {
             self.modelURL = modelURL
@@ -294,6 +299,7 @@ public final class PoliteCoreStorage: Sendable {
                              sourceMOM: source.model,
                              destinationMOM: destination.model,
                              customMappingModelName: source.customMappingModelName,
+                             customMappingModelBundle: source.customMappingModelBundle,
                              allowPersistentHistoryTracking: allowPersistentHistoryTracking,
                              allowPersistentStoreRemoteChangeNotificationPost: allowPersistentStoreRemoteChangeNotificationPost)
             migrationStep?(source, destination)
@@ -897,9 +903,11 @@ private extension PoliteCoreStorage {
             let storeVersionIdentifier = (storeMetadata["NSStoreModelVersionIdentifiers"] as? [String])?.first
             let resultMap: [String: MigrationModelVersion] = try modelsURLs.reduce(into: [:], { (result, modelURL) in
                 var modelVersion = try MigrationModelVersion(modelURL)
-                modelVersion.customMappingModelName = items.first(where: { (item) in
+                let item = items.first(where: { (item) in
                     return item.identifier == modelVersion.modelName || item.identifier == modelVersion.versionIdentifier
-                })?.customMappingModelName
+                })
+                modelVersion.customMappingModelName = item?.customMappingModelName
+                modelVersion.customMappingModelBundle = item?.customMappingModelBundle
                 let mapKey: String
                 mapKey = nameBased ? modelVersion.modelName : try modelVersion.validVersionIdentifier
                 guard result[mapKey] == nil else { throw PCError.momVersionIdentifierDuplicated }
@@ -924,10 +932,12 @@ private extension PoliteCoreStorage {
         let storeVersionIdentifier = (storeMetadata["NSStoreModelVersionIdentifiers"] as? [String])?.first
         let result: [MigrationModelVersion] = try modelsURLs.reduce(into: [], { (result, modelURL) in
             var modelVersion = try MigrationModelVersion(modelURL)
-            modelVersion.customMappingModelName = try items.first(where: { (item) in
+            let item = try items.first(where: { (item) in
                 let validVersionIdentifier = try modelVersion.validVersionIdentifier
                 return item.identifier == validVersionIdentifier
-            })?.customMappingModelName
+            })
+            modelVersion.customMappingModelName = item?.customMappingModelName
+            modelVersion.customMappingModelBundle = item?.customMappingModelBundle
             if storeVersion == nil,
                modelVersion.model.isConfiguration(withName: nil, compatibleWithStoreMetadata: storeMetadata),
                storeVersionIdentifier == modelVersion.versionIdentifier {
@@ -945,6 +955,7 @@ private extension PoliteCoreStorage {
                               sourceMOM: NSManagedObjectModel,
                               destinationMOM: NSManagedObjectModel,
                               customMappingModelName: String?,
+                              customMappingModelBundle: Bundle?,
                               allowPersistentHistoryTracking: Bool,
                               allowPersistentStoreRemoteChangeNotificationPost: Bool) throws {
         let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
@@ -955,7 +966,8 @@ private extension PoliteCoreStorage {
         // find mapping model
         let mappingModel: NSMappingModel
         if let customMappingModelNameActual = customMappingModelName {
-            if let url = Bundle.main.url(forResource: customMappingModelNameActual, withExtension: "cdm"),
+            let bundle = customMappingModelBundle ?? Bundle.main
+            if let url = bundle.url(forResource: customMappingModelNameActual, withExtension: "cdm"),
                let customMapping = NSMappingModel(contentsOf: url) {
                 mappingModel = customMapping
             } else {

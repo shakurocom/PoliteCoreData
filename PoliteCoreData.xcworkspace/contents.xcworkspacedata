@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:MigrationTestNames_v1_to_v2.xcmappingmodel">
+   </FileRef>
+   <FileRef
       location = "group:PoliteCoreData_Framework.xcodeproj">
    </FileRef>
    <FileRef
