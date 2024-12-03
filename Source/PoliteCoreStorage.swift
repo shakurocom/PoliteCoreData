@@ -500,8 +500,8 @@ public extension PoliteCoreStorage {
 
 public extension PoliteCoreStorage {
 
-    func save(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Void) async throws {
-        try await saveContext(rootSavingContext, changesBlock: body)
+    func save<Result>(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
+        return try await saveContext(rootSavingContext, changesBlock: body)
     }
 
     /// Performs block on private queue of saving context.
@@ -1035,17 +1035,18 @@ private extension PoliteCoreStorage {
 
     // MARK: Helpers
 
-    private func saveContext(_ context: NSManagedObjectContext,
-                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil) async throws {
-        try await context.perform(schedule: .enqueued, {
+    private func saveContext<Result>(_ context: NSManagedObjectContext,
+                                     changesBlock: @escaping (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
+        return try await context.perform(schedule: .enqueued, {
             context.reset()
             do {
-                try changesBlock?(context)
+                let result = try changesBlock(context)
                 guard context.hasChanges else {
-                    return
+                    return result
                 }
                 try context.save()
                 context.reset()
+                return result
             } catch let error {
                 context.reset()
                 assertionFailure("Could not save context \(error)")
