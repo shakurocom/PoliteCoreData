@@ -7,10 +7,10 @@ import PoliteCoreData_Framework
 
 struct SwiftUIView: View {
 
-    @ObservedObject private var interactor: ExampleCoreDataInteractor
+    @StateObject private var interactor: ExampleCoreDataInteractor
 
     init(storage: DataStorage) {
-        _interactor = ObservedObject(initialValue: ExampleCoreDataInteractor(dataStorage: storage))
+        _interactor = StateObject(wrappedValue: ExampleCoreDataInteractor(dataStorage: storage))
     }
 
     var body: some View {
