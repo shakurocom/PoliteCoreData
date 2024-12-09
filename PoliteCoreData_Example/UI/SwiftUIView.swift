@@ -7,22 +7,25 @@ import PoliteCoreData_Framework
 
 struct SwiftUIView: View {
 
-    @FetchableRequest private var items: ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>
-
-    private let storage: DataStorage
+    @ObservedObject private var interactor: ExampleCoreDataInteractor
 
     init(storage: DataStorage) {
-        self.storage = storage
-        self._items = storage.fetchableRequest()
+        _interactor = ObservedObject(initialValue: ExampleCoreDataInteractor(dataStorage: storage))
     }
 
     var body: some View {
-        List {
-            ForEach(items.indices, id: \.self) { index in
-                Text(items[index].identifier)
+        List(interactor.items) { result in
+            switch result {
+            case .value(let item):
+                Text(item.identifier)
                     .font(.system(size: 10.0, weight: .bold))
+            case .empty:
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(height: 1)
             }
         }
+        .animation(.easeInOut, value: interactor.items)
         .navigationBarHidden(false)
         .listStyle(.plain)
         .toolbar {
@@ -38,15 +41,21 @@ struct SwiftUIView: View {
                 }
             }
         }
+        .onAppear {
+            interactor.setup()
+        }
     }
+
 }
 
 private extension SwiftUIView {
+
     private func deleteLastItem() {
-        storage.deleteLastItem()
+        interactor.deleteLastItem()
     }
 
     private func insertLastItem() {
-        storage.insertLastItem()
+        interactor.insertLastItem()
     }
+
 }

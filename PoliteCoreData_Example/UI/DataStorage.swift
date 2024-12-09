@@ -12,7 +12,7 @@ protocol DataStorage {
     func deleteItem(_ identifier: String)
     func exampleFetchedResultController() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity>
 
-    func fetchableRequest() -> FetchableRequest<ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>>
+    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> // FetchableRequest<ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>>
 }
 
 extension PoliteCoreStorage: DataStorage {
@@ -21,11 +21,7 @@ extension PoliteCoreStorage: DataStorage {
         save({ (context) in
             let cdItem = self.findFirstByIdOrCreate(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context)
             _ = cdItem.update(entity: item)
-        }, completion: { (error) in
-            if let actualError = error {
-                assertionFailure("\(actualError)")
-            }
-        })
+        }, completion: { _ in })
     }
 
     func deleteLastItem() {
@@ -42,11 +38,7 @@ extension PoliteCoreStorage: DataStorage {
             if let cdItem = self.findFirstById(entityType: CDExampleEntity.self, identifier: identifier, inContext: context) {
                 context.delete(cdItem)
             }
-        }, completion: { (error) in
-            if let actualError = error {
-                assertionFailure("\(actualError)")
-            }
-        })
+        }, completion: { _ in })
     }
 
     func exampleFetchedResultController() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> {
@@ -59,13 +51,13 @@ extension PoliteCoreStorage: DataStorage {
         return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
 
-    func fetchableRequest() -> FetchableRequest<ItemsFetchableResults<CDExampleEntity, ManagedExampleEntity>> {
+    func fetchableRequest() -> FetchedResultsController<CDExampleEntity, ManagedExampleEntity> {
         let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
         let controller = mainQueueFetchedResultsController(
             entityType: CDExampleEntity.self,
             sortDescriptors: sortDescriptor,
             configureRequest: nil)
 
-        return FetchableRequest(fetchedResultsController: controller, animation: .default)
+        return FetchedResultsController<CDExampleEntity, ManagedExampleEntity>(fetchedResultsController: controller)
     }
 }
