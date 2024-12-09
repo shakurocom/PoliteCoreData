@@ -13,7 +13,7 @@ class ExampleEntity {
     let createdAt: Date
     let updatedAt: Date
 
-    init(identifier: String, createdAt: Date, updatedAt: Date) {
+    init(identifier: String = NSUUID().uuidString, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.identifier = identifier
@@ -22,11 +22,12 @@ class ExampleEntity {
     init(entity: CDExampleEntity) {
         createdAt = Date(timeIntervalSince1970: entity.createdAt)
         updatedAt = Date(timeIntervalSince1970: entity.updatedAt)
-        identifier = entity.identifier ?? UUID().uuidString
+        identifier = entity.identifier
     }
 }
 
 final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
+
     let objectID: NSManagedObjectID
 
     override init(entity: CDExampleEntity) {
