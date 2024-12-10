@@ -17,3 +17,4 @@ class V1_to_V2_MigrationPolicy: NSEntityMigrationPolicy {
         return Int(identifier) ?? 0
     }
 }
+// swiftlint:enable type_name

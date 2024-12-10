@@ -5,6 +5,7 @@
 import SwiftUI
 import PoliteCoreData_Framework
 
+@MainActor
 final class ExampleCoreDataInteractor: ObservableObject {
 
     @Published private(set) var items: LazyList<FetchedResultsController<CDExampleEntity, ManagedExampleEntity>.WrappedResult> = .empty

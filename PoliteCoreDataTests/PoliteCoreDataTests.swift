@@ -8,13 +8,14 @@ import XCTest
 
 final class PoliteCoreDataTests: XCTestCase {
 
-    private let namesConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestNames", isExcludedFromBackup: true)
-    private let idsConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestIds", isExcludedFromBackup: true)
+    private let namesConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestNames", isExcludedFromBackup: true, isInMemory: false)
+    private let idsConfig = PoliteCoreStorage.Configuration(objectModelName: "MigrationTestIds", isExcludedFromBackup: true, isInMemory: false)
 
     // swiftlint:disable identifier_name
     private var V0_V1Success: Bool = false
     private var V1_V2Success: Bool = false
     private var V2_V3Success: Bool = false
+    // swiftlint:enable identifier_name
 
     override func setUp() {
         if FileManager.default.fileExists(atPath: namesConfig.sqliteStoreDirectoryURL.path) {
@@ -36,17 +37,23 @@ final class PoliteCoreDataTests: XCTestCase {
 
     // improve core data test inside library: implement test with testing actual steps and make several moms (valid and broken) and check if migrations actually started
 
+    @MainActor
     func testMigrationNamesList () {
         let configuration = namesConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
+            let bundle = Bundle(for: PoliteCoreDataTests.self)
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestNames.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelNameList([
                 PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_1", customMappingModelName: "Model_v1_to_v2"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_2", customMappingModelName: "Model_v2_to_v3"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_1",
+                                                     customMappingModelName: "MigrationTestNames_v1_to_v2",
+                                                     customMappingModelBundle: bundle),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_2",
+                                                     customMappingModelName: "MigrationTestNames_v2_to_v3",
+                                                     customMappingModelBundle: bundle),
                 PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_3")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
@@ -68,31 +75,38 @@ final class PoliteCoreDataTests: XCTestCase {
         XCTAssertTrue(V0_V1Success && V1_V2Success && V2_V3Success, "Migration failed")
     }
 
+    @MainActor
     func testMigrationIds() {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
+            let bundle = Bundle(for: PoliteCoreDataTests.self)
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestIds.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
-            let identifiers = PoliteCoreStorage.MigrationOrder.modelIdentifiers(items: [
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version2", customMappingModelName: "Model_v1_to_v2_ids"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version11"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version3", customMappingModelName: "Model_v2_to_v3_ids")
-            ])
-            try storage.migrate(migrationOrder: identifiers) { fromVersion, toVersion in
-                switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
-                case ("version1", "version2"):
-                    self.V0_V1Success = true
-                case ("version2", "version3"):
-                    self.V1_V2Success = true
-                case ("version3", "version11"):
-                    self.V2_V3Success = true
-                default:
-                    XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
-                }
-            }
+            try storage.migrate(
+                migrationOrder: .modelIdentifiers(items: [
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version2",
+                                                         customMappingModelName: "Model_v1_to_v2_ids",
+                                                         customMappingModelBundle: bundle),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version3",
+                                                         customMappingModelName: "Model_v2_to_v3_ids",
+                                                         customMappingModelBundle: bundle),
+                    PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
+                ]),
+                migrationStep: { fromVersion, toVersion in
+                    switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
+                    case ("version1", "version2"):
+                        self.V0_V1Success = true
+                    case ("version2", "version3"):
+                        self.V1_V2Success = true
+                    case ("version3", "version11"):
+                        self.V2_V3Success = true
+                    default:
+                        XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
+                    }
+                })
             try storage.setupStack(removeDBOnSetupFailed: false)
         } catch let error {
             XCTFail("Migration failed: \(error)")
@@ -100,17 +114,23 @@ final class PoliteCoreDataTests: XCTestCase {
         XCTAssertTrue(V0_V1Success && V1_V2Success && V2_V3Success, "Migration failed")
     }
 
+    @MainActor
     func testMigrationIdsList () {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
+            let bundle = Bundle(for: PoliteCoreDataTests.self)
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestIds.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
             let list = PoliteCoreStorage.MigrationOrder.modelIdentifierList([
                 PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version2", customMappingModelName: "Model_v1_to_v2_ids"),
-                PoliteCoreStorage.MigrationOrderItem(identifier: "version3", customMappingModelName: "Model_v2_to_v3_ids"),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version2",
+                                                     customMappingModelName: "Model_v1_to_v2_ids",
+                                                     customMappingModelBundle: bundle),
+                PoliteCoreStorage.MigrationOrderItem(identifier: "version3",
+                                                     customMappingModelName: "Model_v2_to_v3_ids",
+                                                     customMappingModelBundle: bundle),
                 PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
             ])
             try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
@@ -132,48 +152,6 @@ final class PoliteCoreDataTests: XCTestCase {
         XCTAssertTrue(V0_V1Success && V1_V2Success && V2_V3Success, "Migration failed")
     }
 
-    private func handleMigrationToVersion2(managedObjectModel: NSManagedObjectModel, sqliteFileURL: URL) -> Error? {
-        var error: Error?
-        do {
-            // check data that were saved in previous migration steps
-            let stack = try self.setupTemporaryStack(managedObjectModel: managedObjectModel, sqliteFileURL: sqliteFileURL)
-            try self.saveContextAndWait(stack.context, changesBlock: { (context) in
-                let request: NSFetchRequest<NSManagedObject> = NSFetchRequest<NSManagedObject>(entityName: "CDDanalyticsEvent")
-                let events = try? context.fetch(request)
-                XCTAssertTrue(events?.isEmpty == true, "Events were not removed.")
-            })
-            // save new data that became available after migration
-            try self.saveContextAndWait(stack.context, changesBlock: { (context) in
-                let basket = NSEntityDescription.insertNewObject(forEntityName: "CDScanGoBasket", into: context)
-                basket.setValue(UUID(), forKey: "sessionUUID")
-                var items = Set<NSManagedObject>()
-                for _ in 1...10 {
-                    let item = NSEntityDescription.insertNewObject(forEntityName: "CDScanGoBasketItem", into: context)
-                    item.setValue(UUID(), forKey: "itemUUID")
-                    items.insert(item)
-                }
-                basket.setValue(items, forKey: "items")
-            })
-            // check new data that became available after migration
-            try saveContextAndWait(stack.context, changesBlock: { (context) in
-                let request: NSFetchRequest<NSManagedObject> = NSFetchRequest<NSManagedObject>(entityName: "CDScanGoBasket")
-                let baskets = try? context.fetch(request)
-                XCTAssertTrue(baskets?.count == 1, "Wrong baskets count.")
-                let uuid = baskets?.first?.value(forKey: "sessionUUID") as? UUID
-                XCTAssertTrue(uuid != nil, "Basket UUID does not exist.")
-                let items = (baskets?.first?.value(forKey: "items") as? Set<NSManagedObject>) ?? []
-                XCTAssertTrue(items.count == 10, "Wrong items count.")
-                for item in items {
-                    let uuid = item.value(forKey: "itemUUID") as? UUID
-                    XCTAssertTrue(uuid != nil, "Basket item UUID does not exist.")
-                }
-            })
-        } catch let errorActual {
-            error = errorActual
-        }
-        return error
-    }
-
     private func setupTemporaryStack(
         managedObjectModel: NSManagedObjectModel,
         sqliteFileURL: URL) throws -> (coordinator: NSPersistentStoreCoordinator, context: NSManagedObjectContext) {
@@ -187,26 +165,5 @@ final class PoliteCoreDataTests: XCTestCase {
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: sqliteFileURL, options: options)
             return (coordinator, context)
         }
-
-    private func saveContextAndWait(_ context: NSManagedObjectContext,
-                                    changesBlock: ((_ context: NSManagedObjectContext) -> Void)? = nil) throws {
-        var saveError: Error?
-        context.performAndWait {
-            context.reset()
-            changesBlock?(context)
-            guard context.hasChanges else {
-                return
-            }
-            do {
-                try context.save()
-                context.reset()
-            } catch let error {
-                saveError = error
-            }
-        }
-        if let actualError = saveError {
-            throw actualError
-        }
-    }
 
 }

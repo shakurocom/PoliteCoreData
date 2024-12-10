@@ -1,4 +1,4 @@
-swiftlint_version: 0.47.0
+swiftlint_version: 0.53.0
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
     - Pods
@@ -9,7 +9,7 @@ analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
     - unused_import
 
 deployment_target:
-    iOS_deployment_target: 10.0
+    iOS_deployment_target: 15.0
 
 closure_body_length:
     warning: 30
@@ -65,7 +65,6 @@ opt_in_rules:
     - force_unwrapping
     - identical_operands
     # - indentation_width # disabled, because multiline arguments are not recognized properly
-    - inert_defer
     - last_where
     - legacy_random
     - let_var_whitespace

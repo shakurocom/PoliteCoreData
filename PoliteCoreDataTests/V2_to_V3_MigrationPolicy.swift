@@ -17,3 +17,4 @@ class V2_to_V3_MigrationPolicy: NSEntityMigrationPolicy {
         return "\(identifier)"
     }
 }
+// swiftlint:enable type_name
