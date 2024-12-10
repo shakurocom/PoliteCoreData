@@ -14,8 +14,8 @@ A Swift Core Data wrapper. PoliteCoreData uses Swift models instead Core Data ma
 
 ## Requirements
 
-- iOS 11.0+
-- Xcode 11.0+
+- iOS 15.0+
+- Xcode 15.0+
 - Swift 5.0+
 
 ## Installation
