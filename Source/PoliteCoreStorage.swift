@@ -3,7 +3,7 @@
 //
 //
 
-@preconcurrency import CoreData // TODO: implement - add actors for contexts? (according to docs context should have 1 queue)
+@preconcurrency import CoreData
 import Shakuro_CommonTypes
 
 /// The main object that manages Core Data stack and encapsulates helper methods for interaction with Core Data objects
@@ -378,13 +378,7 @@ public final class PoliteCoreStorage: Sendable {
     /// Calls reset() on main queue context
     @MainActor
     public func resetMainQueueContext() {
-        if Thread.isMainThread {
-            // look on PoliteCoreStorage -> saveContextAndWait func
-            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
-        }
-        mainQueueContext.performAndWait { () -> Void in // TODO: implement replace performAndWait with async
-            self.mainQueueContext.reset()
-        }
+        mainQueueContext.reset()
     }
 
     /// Calls reset() on private queue rootSavingContext
@@ -500,7 +494,7 @@ public extension PoliteCoreStorage {
 
 public extension PoliteCoreStorage {
 
-    func save<Result>(_ body: @escaping (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
+    func save<Result>(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
         return try await saveContext(rootSavingContext, changesBlock: body)
     }
 
@@ -601,7 +595,7 @@ public extension PoliteCoreStorage {
     /// - Parameters:
     ///   - body: A closure that takes a context as a parameter.
     /// - Tag: fetchWithBlock
-    func fetch(_ body: @escaping ((_ context: NSManagedObjectContext) throws -> Void)) throws {
+    func fetch(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> Void)) throws {
         let fetchContext: NSManagedObjectContext = concurrentFetchContext
         var encounteredError: Error?
         fetchContext.perform({ () -> Void in
@@ -621,7 +615,7 @@ public extension PoliteCoreStorage {
 
     /// Synchronous variant of [save](x-source-tag://fetchWithBlock)
     /// - Tag: fetchWithBlockAndWait
-    func fetchAndWait(_ body: @escaping ((_ context: NSManagedObjectContext) throws -> Void)) throws {
+    func fetchAndWait(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> Void)) throws {
         let fetchContext: NSManagedObjectContext = concurrentFetchContext
         var encounteredError: Error?
         // TODO: implement replace performAndWait with async
@@ -1036,7 +1030,7 @@ private extension PoliteCoreStorage {
     // MARK: Helpers
 
     private func saveContext<Result>(_ context: NSManagedObjectContext,
-                                     changesBlock: @escaping (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
+                                     changesBlock: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
         return try await context.perform(schedule: .enqueued, { // TODO: implement -  .enqueued
             context.reset()
             do {
