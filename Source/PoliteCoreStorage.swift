@@ -317,7 +317,7 @@ public final class PoliteCoreStorage: Sendable {
                         allowPersistentHistoryTracking: Bool = false,
                         allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
                         migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
-                        completion: @MainActor @Sendable @escaping (Result<Void, Error>) -> Void) {
+                        completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
         Task(operation: {
             var error: Error?
             do {
@@ -363,7 +363,7 @@ public final class PoliteCoreStorage: Sendable {
     ///   - removeDBOnSetupFailed: Pass true to remove DB files and recreate from scratch in case of setup failed
     ///   - completion: executed when setup finished with result
     @MainActor
-    public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+    public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping @Sendable (Result<Void, Error>) -> Void) {
         setupCoreDataStack(removeOldDB: false, completion: { (result) in
             if removeDBOnSetupFailed, case .failure = result {
                 self.setupCoreDataStack(removeOldDB: true, completion: completion)
@@ -746,7 +746,7 @@ private extension PoliteCoreStorage {
     }
 
     @MainActor
-    private func setupCoreDataStack(removeOldDB: Bool, completion: @escaping (_ result: Result<Void, Error>) -> Void) {
+    private func setupCoreDataStack(removeOldDB: Bool, completion: @escaping @MainActor @Sendable (_ result: Result<Void, Error>) -> Void) {
         setupCoreDataContexts()
         makeRootStorageDirectory(removeOldDB: removeOldDB)
         Task(operation: {
