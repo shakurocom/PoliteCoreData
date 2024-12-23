@@ -363,7 +363,7 @@ public final class PoliteCoreStorage: Sendable {
     ///   - removeDBOnSetupFailed: Pass true to remove DB files and recreate from scratch in case of setup failed
     ///   - completion: executed when setup finished with result
     @MainActor
-    public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping @Sendable (Result<Void, Error>) -> Void) {
+    public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
         setupCoreDataStack(removeOldDB: false, completion: { (result) in
             if removeDBOnSetupFailed, case .failure = result {
                 self.setupCoreDataStack(removeOldDB: true, completion: completion)
@@ -632,6 +632,21 @@ public extension PoliteCoreStorage {
         if let error = encounteredError {
             throw error
         }
+    }
+
+    func fetchAndWait<ResultType>(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> ResultType?)) throws -> ResultType? {
+        let fetchContext: NSManagedObjectContext = concurrentFetchContext
+        return try fetchContext.performAndWait({ () throws -> ResultType? in
+            do {
+                let result = try body(fetchContext)
+                fetchContext.reset()
+                return result
+            } catch let error {
+                fetchContext.reset()
+                assertionFailure("Could not fetch: \(error)")
+                throw error
+            }
+        })
     }
 
     /// Returns entity for the specified objectID or nil if entity does not exist.
