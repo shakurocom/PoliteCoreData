@@ -216,7 +216,6 @@ public final class PoliteCoreStorage: Sendable {
     private let persistentStoreCoordinatorMain: NSPersistentStoreCoordinator!
     private let persistentStoreCoordinatorWorker: NSPersistentStoreCoordinator!
     private let classToEntityNameMap: [String: String]!
-    private let callbackQueue: DispatchQueue
     @MainActor
     private var notificationsTask: Task<(), Never>?
 
@@ -231,7 +230,6 @@ public final class PoliteCoreStorage: Sendable {
             fatalError("Could not initialize database object model")
         }
         self.configuration = configuration
-        callbackQueue = DispatchQueue(label: "politeCoreStorage.callbackQueue.queue", attributes: [.concurrent])
         classToEntityNameMap = model.entitiesByName.reduce(into: [:], { (result, entry) in
             result[entry.value.managedObjectClassName] = entry.key
         })
@@ -259,7 +257,7 @@ public final class PoliteCoreStorage: Sendable {
                         allowPersistentHistoryTracking: Bool = false,
                         allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
                         migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion,
-                                                   _ toVersion: MigrationModelVersion) -> Void)?) throws {
+                                                   _ toVersion: MigrationModelVersion) async -> Void)?) async throws {
         let storeURL = configuration.sqliteStoreURL
 
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
@@ -302,40 +300,8 @@ public final class PoliteCoreStorage: Sendable {
                              customMappingModelBundle: source.customMappingModelBundle,
                              allowPersistentHistoryTracking: allowPersistentHistoryTracking,
                              allowPersistentStoreRemoteChangeNotificationPost: allowPersistentStoreRemoteChangeNotificationPost)
-            migrationStep?(source, destination)
+            await migrationStep?(source, destination)
         }
-    }
-
-    /// Migrates database to new model version synchronous
-    ///
-    /// - Parameters:
-    ///   - migrationStep: Executed when simple migration step between neighboring models is done (e.g. 1 -> 2, 2 -> 3, 3 -> 4 ...).
-    ///                    Additional data save can be performed here.
-    ///   - completion: executed when migration finished with result
-    @MainActor
-    public func migrate(migrationOrder: MigrationOrder,
-                        allowPersistentHistoryTracking: Bool = false,
-                        allowPersistentStoreRemoteChangeNotificationPost: Bool = false,
-                        migrationStep: (@Sendable (_ fromVersion: MigrationModelVersion, _ toVersion: MigrationModelVersion) -> Void)? = nil,
-                        completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
-        Task(operation: {
-            var error: Error?
-            do {
-                try self.migrate(migrationOrder: migrationOrder,
-                                 allowPersistentHistoryTracking: allowPersistentHistoryTracking,
-                                 allowPersistentStoreRemoteChangeNotificationPost: allowPersistentStoreRemoteChangeNotificationPost,
-                                 migrationStep: migrationStep)
-            } catch let errorActual {
-                error = errorActual
-            }
-            Task(operation: { @MainActor in
-                if let errorActual = error {
-                    completion(.failure(errorActual))
-                } else {
-                    completion(.success(()))
-                }
-            })
-        })
     }
 
     // MARK: - Setup
@@ -382,14 +348,10 @@ public final class PoliteCoreStorage: Sendable {
     }
 
     /// Calls reset() on private queue rootSavingContext
-    public func resetRootSavingContext() {
-        if Thread.isMainThread {
-            // look on PoliteCoreStorage -> saveContextAndWait func
-            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
-        }
-        rootSavingContext.performAndWait { () -> Void in // TODO: implement replace performAndWait with async
+    public func resetRootSavingContext() async {
+        await rootSavingContext.perform({
             self.rootSavingContext.reset()
-        }
+        })
     }
 
 }
@@ -411,6 +373,11 @@ public extension PoliteCoreStorage {
         return existingEntity(objectID: objectID, context: mainQueueContext)
     }
 
+    @MainActor
+    func executeInMainQueueContext<T>(request: NSFetchRequest<T>) throws -> [T] {
+        return try execute(request: request, context: mainQueueContext)
+    }
+
     /// Returns an entity for the specified predicate or nil if the object does not exist.
     /// See also [findFirst](x-source-tag://findFirst)
     ///
@@ -420,8 +387,8 @@ public extension PoliteCoreStorage {
     /// - Returns: First found entity or nil
     /// - Warning: To use on main queue only!
     @MainActor
-    func findFirstInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate) -> T? {
-        return findFirst(entityType: entityType, predicate: predicate, context: mainQueueContext)
+    func findFirstInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate?) throws -> T? {
+        return try findFirst(entityType: entityType, predicate: predicate, context: mainQueueContext)
     }
 
     /// Finds all entities with given type. Optionally filterred by predicate
@@ -435,9 +402,9 @@ public extension PoliteCoreStorage {
     /// - Warning: To use on main queue only!
     @MainActor
     func findAllInMainQueueContext<T: NSManagedObject>(entityType: T.Type,
-                                                       sortDescriptors: [NSSortDescriptor],
-                                                       predicate: NSPredicate? = nil) -> [T]? {
-        return findAll(entityType: entityType, context: mainQueueContext, sortDescriptors: sortDescriptors, predicate: predicate)
+                                                       sortDescriptors: [NSSortDescriptor]? = nil,
+                                                       predicate: NSPredicate? = nil) throws -> [T] {
+        return try findAll(entityType: entityType, context: mainQueueContext, sortDescriptors: sortDescriptors, predicate: predicate)
     }
 
     /// Returns new NSFetchedResultsController for using in main queue.
@@ -484,8 +451,8 @@ public extension PoliteCoreStorage {
     /// - Returns: Returns the number of entities.
     /// - Warning: To use on main queue only!
     @MainActor
-    func countForEntityInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate? = nil) -> Int {
-        return count(entityType: entityType, context: mainQueueContext, predicate: predicate)
+    func countForEntityInMainQueueContext<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate? = nil) throws -> Int {
+        return try count(entityType: entityType, context: mainQueueContext, predicate: predicate)
     }
 
 }
@@ -494,25 +461,14 @@ public extension PoliteCoreStorage {
 
 public extension PoliteCoreStorage {
 
-    func save<Result>(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
-        return try await saveContext(rootSavingContext, changesBlock: body)
-    }
-
     /// Performs block on private queue of saving context.
     ///
     /// - Parameters:
     ///   - body: A closure that takes a context as a parameter. Will be executed on private context queue. Caller could apply any changes to DB in it. At the end of execution context will be saved.
     ///   - completion: A closure that takes a saving error as a parameter. Will be performed after saving context.
-    /// - Tag: saveWithBlock
-    func save(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Void,
-              completion: @escaping @Sendable (_ error: Error?) -> Void) {
-        saveContext(rootSavingContext, changesBlock: body, completion: completion)
-    }
-
-    /// Synchronous variant of [save](x-source-tag://saveWithBlock)
-    /// - Tag: saveWithBlockAndWait
-    func saveAndWait(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Void) throws {
-        try saveContextAndWait(rootSavingContext, changesBlock: body)
+    /// - Tag: save
+    func save<Result>(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
+        return try await saveContext(rootSavingContext, changesBlock: body)
     }
 
     /// Finds first entity that matches predicate, or creates new one if no entity found
@@ -524,8 +480,8 @@ public extension PoliteCoreStorage {
     ///   - context:  NSManagedObjectContext where entity should be find
     /// - Returns: First found or created entity, never returns nil
     /// - Tag: findFirstOrCreate
-    func findFirstOrCreate<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate, context: NSManagedObjectContext) -> T {
-        if let object: T = findFirst(entityType: entityType, predicate: predicate, context: context) {
+    func findFirstOrCreate<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate, context: NSManagedObjectContext) throws -> T {
+        if let object: T = try findFirst(entityType: entityType, predicate: predicate, context: context) {
             return object
         }
         return create(entityType: entityType, context: context)
@@ -550,7 +506,7 @@ public extension PoliteCoreStorage {
         guard let entity: T = NSEntityDescription.insertNewObject(forEntityName: name, into: context) as? T else {
             fatalError("\(type(of: self)) - \(#function): . \(name)")
         }
-        return  entity
+        return entity
     }
 
     /// Creates new NSFetchRequest
@@ -574,14 +530,14 @@ public extension PoliteCoreStorage {
     ///   - request: NSFetchRequest to execute.
     ///   - context: The target NSManagedObjectContext
     /// - Returns: Array of fetched objects.
-    func execute<T: NSManagedObject>(request: NSFetchRequest<T>, context: NSManagedObjectContext) -> [T] {
-        var results: [T]?
+    func execute<T>(request: NSFetchRequest<T>, context: NSManagedObjectContext) throws -> [T] {
         do {
-            try results = context.fetch(request)
+            let results: [T] = try context.fetch(request)
+            return results
         } catch let error {
             assertionFailure("Can't execute Fetch Request \(error)")
+            throw error
         }
-        return results ?? [T]()
     }
 
 }
@@ -594,49 +550,10 @@ public extension PoliteCoreStorage {
     ///
     /// - Parameters:
     ///   - body: A closure that takes a context as a parameter.
-    /// - Tag: fetchWithBlock
-    func fetch(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> Void)) throws {
+    /// - Tag: fetch
+    func fetch<ResultType>(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> ResultType)) async throws -> ResultType {
         let fetchContext: NSManagedObjectContext = concurrentFetchContext
-        var encounteredError: Error?
-        fetchContext.perform({ () -> Void in
-            do {
-                try body(fetchContext)
-                fetchContext.reset()
-            } catch let error {
-                encounteredError = error
-                fetchContext.reset()
-                assertionFailure("Could not fetch: \(error)")
-            }
-        })
-        if let error = encounteredError {
-            throw error
-        }
-    }
-
-    /// Synchronous variant of [save](x-source-tag://fetchWithBlock)
-    /// - Tag: fetchWithBlockAndWait
-    func fetchAndWait(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> Void)) throws {
-        let fetchContext: NSManagedObjectContext = concurrentFetchContext
-        var encounteredError: Error?
-        // TODO: implement replace performAndWait with async
-        fetchContext.performAndWait({ () -> Void in
-            do {
-                try body(fetchContext)
-                fetchContext.reset()
-            } catch let error {
-                encounteredError = error
-                fetchContext.reset()
-                assertionFailure("Could not fetch: \(error)")
-            }
-        })
-        if let error = encounteredError {
-            throw error
-        }
-    }
-
-    func fetchAndWait<ResultType>(_ body: @escaping @Sendable ((_ context: NSManagedObjectContext) throws -> ResultType?)) throws -> ResultType? {
-        let fetchContext: NSManagedObjectContext = concurrentFetchContext
-        return try fetchContext.performAndWait({ () throws -> ResultType? in
+        return try await fetchContext.perform({
             do {
                 let result = try body(fetchContext)
                 fetchContext.reset()
@@ -675,10 +592,10 @@ public extension PoliteCoreStorage {
     ///   - context: The target context
     /// - Returns: First found entity or nil
     /// - Tag: findFirst
-    func findFirst<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate, context: NSManagedObjectContext) -> T? {
+    func findFirst<T: NSManagedObject>(entityType: T.Type, predicate: NSPredicate?, context: NSManagedObjectContext) throws -> T? {
         let request = createRequest(entityType: entityType, predicate: predicate)
         request.fetchLimit = 1
-        return execute(request: request, context: context).first
+        return try execute(request: request, context: context).first
     }
 
     /// Finds all entities with given type. Optionally filterred by predicate
@@ -693,9 +610,9 @@ public extension PoliteCoreStorage {
     func findAll<T: NSManagedObject>(entityType: T.Type,
                                      context: NSManagedObjectContext,
                                      sortDescriptors: [NSSortDescriptor]? = nil,
-                                     predicate: NSPredicate? = nil) -> [T] {
+                                     predicate: NSPredicate? = nil) throws -> [T] {
         let request = createRequest(entityType: entityType, sortDescriptors: sortDescriptors, predicate: predicate)
-        return execute(request: request, context: context)
+        return try execute(request: request, context: context)
     }
 
     /// Returns the number of entities according to the given predicate.
@@ -706,10 +623,10 @@ public extension PoliteCoreStorage {
     ///   - predicate: NSPredicate to filter by
     /// - Returns: Returns the number of entities.
     /// - Tag: countForEntity
-    func count<T: NSManagedObject>(entityType: T.Type, context: NSManagedObjectContext, predicate: NSPredicate? = nil) -> Int {
+    func count<T: NSManagedObject>(entityType: T.Type, context: NSManagedObjectContext, predicate: NSPredicate? = nil) throws -> Int {
         let request = createRequest(entityType: entityType, predicate: predicate)
         request.resultType = .managedObjectIDResultType
-        return count(request: request, context: context)
+        return try count(request: request, context: context)
     }
 
     /// Returns the number of entities according to the given fetch request.
@@ -719,28 +636,26 @@ public extension PoliteCoreStorage {
     ///   - context: The target context
     /// - Returns: Returns the number of entities.
     /// - Tag: countForFetchRequest
-    func count<T: NSManagedObject>(request: NSFetchRequest<T>, context: NSManagedObjectContext) -> Int {
+    func count<T: NSManagedObject>(request: NSFetchRequest<T>, context: NSManagedObjectContext) throws -> Int {
         do {
             let result: Int = try context.count(for: request)
             return result
         } catch let error {
             assertionFailure("Can't execute Fetch Request \(error)")
-            return 0
+            throw error
         }
     }
 
-    func fetchPersistentHistoryTransactionsForLastMinute() throws -> [NSPersistentHistoryTransaction] {
-        var transactions: [NSPersistentHistoryTransaction] = []
-        try fetchAndWait({ (context) in
+    func fetchPersistentHistoryTransactionsForLastMinute() async throws -> [NSPersistentHistoryTransaction] {
+        return try await fetch({ (context) in
             let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: Date(timeIntervalSinceNow: -60))
             guard let historyResult = try? context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
                   let historyTransactions = historyResult.result as? [NSPersistentHistoryTransaction]
             else {
                 fatalError("Could not convert history result to transactions.")
             }
-            transactions = historyTransactions
+            return historyTransactions
         })
-        return transactions
     }
 
 }
@@ -1046,10 +961,13 @@ private extension PoliteCoreStorage {
 
     private func saveContext<Result>(_ context: NSManagedObjectContext,
                                      changesBlock: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
-        return try await context.perform(schedule: .enqueued, { // TODO: implement -  .enqueued
+        return try await context.perform(schedule: .enqueued, {
             context.reset()
             do {
                 let result = try changesBlock(context)
+                if result is NSManagedObject {
+                    assertionFailure("NSManagedObject not allowed as result.")
+                }
                 guard context.hasChanges else {
                     return result
                 }
@@ -1062,64 +980,6 @@ private extension PoliteCoreStorage {
                 throw error
             }
         })
-    }
-
-    private func saveContext(_ context: NSManagedObjectContext,
-                             changesBlock: ((_ context: NSManagedObjectContext) throws -> Void)? = nil,
-                             completion: (@escaping @Sendable (_ error: Error?) -> Void)) {
-        let performCompletionClosure: (_ error: Error?) -> Void = { (error: Error?) -> Void in
-            (self.callbackQueue).async(execute: {
-                completion(error)
-            })
-        }
-        context.perform {
-            context.reset()
-            do {
-                try changesBlock?(context)
-                guard context.hasChanges else {
-                    performCompletionClosure(nil)
-                    return
-                }
-                try context.save()
-                context.reset()
-                performCompletionClosure(nil)
-            } catch let error {
-                context.reset()
-                performCompletionClosure(error)
-                assertionFailure("Could not save context \(error)")
-            }
-        }
-    }
-
-    private func saveContextAndWait(_ context: NSManagedObjectContext,
-                                    changesBlock: (@Sendable (_ context: NSManagedObjectContext) throws -> Void)? = nil) throws {
-        var saveError: Error?
-//        if Thread.isMainThread {
-            // changesBlock will be executed in the calling thread
-            // so if performAndWait will be called on main thread changesBlock will be performed on main thread
-            // and fetched result controllers callbacks will be performed during context.save() inside performAndWait block
-            // this leads to blocked core data queue that can lead to loops or dead locks with external locks (like auth manager lock).
-            // https://stackoverflow.com/questions/11831946/nsmanagedobjectcontext-performblockandwait-doesnt-execute-on-background-thread
-//            Swift.assertionFailure("Attempt to use performAndWait in main thread leads to dead lock")
-//        }
-        context.performAndWait { // TODO: implement replace performAndWait with async?
-            context.reset()
-            do {
-                try changesBlock?(context)
-                guard context.hasChanges else {
-                    return
-                }
-                try context.save()
-                context.reset()
-            } catch let error {
-                context.reset()
-                saveError = error
-                assertionFailure("Could not save context \(error)")
-            }
-        }
-        if let  actualError = saveError {
-            throw actualError
-        }
     }
 
     // MARK: - Observing

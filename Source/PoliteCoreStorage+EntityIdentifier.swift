@@ -53,12 +53,12 @@ public extension PoliteCoreStorage {
                                                    identifierKey: String = NSPredicate.Constant.defaultIdKey,
                                                    inContext context: NSManagedObjectContext,
                                                    andPredicateFormat format: String? = nil,
-                                                   argumentArray: [Any]? = nil) -> T {
+                                                   argumentArray: [Any]? = nil) throws -> T {
         let predicate = NSPredicate.entityWithIDPredicate(identifier: identifier,
                                                           identifierKey: identifierKey,
                                                           andPredicateFormat: format,
                                                           argumentArray: argumentArray)
-        return findFirstOrCreate(entityType: entityType, predicate: predicate, context: context)
+        return try findFirstOrCreate(entityType: entityType, predicate: predicate, context: context)
     }
 
     /// Finds first entity that matches identifier and additional predicate
@@ -75,12 +75,12 @@ public extension PoliteCoreStorage {
                                            identifierKey: String = NSPredicate.Constant.defaultIdKey,
                                            inContext context: NSManagedObjectContext,
                                            andPredicateFormat format: String? = nil,
-                                           argumentArray: [Any]? = nil) -> T? {
+                                           argumentArray: [Any]? = nil) throws -> T? {
         let predicate = NSPredicate.entityWithIDPredicate(identifier: identifier,
                                                           identifierKey: identifierKey,
                                                           andPredicateFormat: format,
                                                           argumentArray: argumentArray)
-        return findFirst(entityType: entityType, predicate: predicate, context: context)
+        return try findFirst(entityType: entityType, predicate: predicate, context: context)
     }
 
 }

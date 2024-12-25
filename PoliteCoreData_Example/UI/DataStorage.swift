@@ -19,28 +19,34 @@ protocol DataStorage {
 extension PoliteCoreStorage: DataStorage {
 
     func insertLastItem() {
-        let item = ExampleEntity()
-        save({ (context) in
-            let cdItem = self.findFirstByIdOrCreate(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context)
-            _ = cdItem.update(entity: item)
-        }, completion: { _ in })
+        Task(operation: {
+            let item = ExampleEntity()
+            try? await save({ (context) in
+                let cdItem = try self.findFirstByIdOrCreate(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context)
+                _ = cdItem.update(entity: item)
+            })
+        })
     }
 
     func deleteLastItem() {
-        save({ (context) in
-            let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
-            if let cdItem = self.findAll(entityType: CDExampleEntity.self, context: context, sortDescriptors: sortDescriptor).last {
-                context.delete(cdItem)
-            }
-        }, completion: { _ in })
+        Task(operation: {
+            try await save({ (context) in
+                let sortDescriptor = [NSSortDescriptor(keyPath: \CDExampleEntity.createdAt, ascending: true)]
+                if let cdItem = try self.findAll(entityType: CDExampleEntity.self, context: context, sortDescriptors: sortDescriptor).last {
+                    context.delete(cdItem)
+                }
+            })
+        })
     }
 
     func deleteItem(_ identifier: String) {
-        save({ (context) in
-            if let cdItem = self.findFirstById(entityType: CDExampleEntity.self, identifier: identifier, inContext: context) {
-                context.delete(cdItem)
-            }
-        }, completion: { _ in })
+        Task(operation: {
+            try await save({ (context) in
+                if let cdItem = try self.findFirstById(entityType: CDExampleEntity.self, identifier: identifier, inContext: context) {
+                    context.delete(cdItem)
+                }
+            })
+        })
     }
 
     @MainActor
