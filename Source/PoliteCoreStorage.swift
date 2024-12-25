@@ -327,16 +327,17 @@ public final class PoliteCoreStorage: Sendable {
     ///
     /// - Parameters:
     ///   - removeDBOnSetupFailed: Pass true to remove DB files and recreate from scratch in case of setup failed
-    ///   - completion: executed when setup finished with result
     @MainActor
-    public func setupStack(removeDBOnSetupFailed: Bool, completion: @escaping @MainActor @Sendable (Result<Void, Error>) -> Void) {
-        setupCoreDataStack(removeOldDB: false, completion: { (result) in
-            if removeDBOnSetupFailed, case .failure = result {
-                self.setupCoreDataStack(removeOldDB: true, completion: completion)
+    public func setupStack(removeDBOnSetupFailed: Bool) async throws {
+        do {
+            try await setupCoreDataStack(removeOldDB: false)
+        } catch let error {
+            if removeDBOnSetupFailed {
+                try await setupCoreDataStack(removeOldDB: true)
             } else {
-                completion(result)
+                throw error
             }
-        })
+        }
     }
 
     // MARK: - Maintenance
@@ -465,7 +466,6 @@ public extension PoliteCoreStorage {
     ///
     /// - Parameters:
     ///   - body: A closure that takes a context as a parameter. Will be executed on private context queue. Caller could apply any changes to DB in it. At the end of execution context will be saved.
-    ///   - completion: A closure that takes a saving error as a parameter. Will be performed after saving context.
     /// - Tag: save
     func save<Result>(_ body: @escaping @Sendable (_ context: NSManagedObjectContext) throws -> Result) async throws -> Result {
         return try await saveContext(rootSavingContext, changesBlock: body)
@@ -658,6 +658,14 @@ public extension PoliteCoreStorage {
         })
     }
 
+    func removeSqliteStoreDirectory() {
+        let storeDirURL: URL = configuration.sqliteStoreDirectoryURL
+        let fileManager: FileManager = FileManager.default
+        if fileManager.fileExists(atPath: storeDirURL.path) {
+            try? fileManager.removeItem(at: storeDirURL)
+        }
+    }
+
 }
 
 // MARK: - Private
@@ -676,23 +684,13 @@ private extension PoliteCoreStorage {
     }
 
     @MainActor
-    private func setupCoreDataStack(removeOldDB: Bool, completion: @escaping @MainActor @Sendable (_ result: Result<Void, Error>) -> Void) {
+    private func setupCoreDataStack(removeOldDB: Bool) async throws {
         setupCoreDataContexts()
-        makeRootStorageDirectory(removeOldDB: removeOldDB)
-        Task(operation: {
-            var error: Error?
-            do {
-                try self.addPersistentStores()
-            } catch let errorActual {
-                error = errorActual
-            }
-            Task(operation: { @MainActor in
-                if let errorActual = error {
-                    completion(.failure(errorActual))
-                } else {
-                    completion(.success(()))
-                }
-            })
+        if !configuration.isInMemory {
+            makeRootStorageDirectory(removeOldDB: removeOldDB)
+        }
+        try await Task(operation: {
+            try self.addPersistentStores()
         })
     }
 
