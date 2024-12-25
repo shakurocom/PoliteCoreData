@@ -5,7 +5,6 @@
 import SwiftUI
 import UIKit
 import PoliteCoreData_Framework
-import Shakuro_CommonTypes
 
 final class HostingViewController: UIViewController {
 

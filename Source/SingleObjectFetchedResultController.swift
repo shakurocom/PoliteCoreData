@@ -69,11 +69,11 @@ private extension SingleObjectFetchedResultController {
                 didChange?(self)
             }
         }
-
         guard fetchedResultsController.numberOfSections() > resultIndexPath.section,
-            fetchedResultsController.numberOfItemsInSection(resultIndexPath.section) > resultIndexPath.row else {
-                result = nil
-                return
+              fetchedResultsController.numberOfItemsInSection(resultIndexPath.section) > resultIndexPath.row
+        else {
+            result = nil
+            return
         }
         result = fetchedResultsController.item(indexPath: resultIndexPath)
     }

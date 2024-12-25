@@ -691,7 +691,7 @@ private extension PoliteCoreStorage {
         }
         try await Task(operation: {
             try self.addPersistentStores()
-        })
+        }).value
     }
 
     @MainActor
