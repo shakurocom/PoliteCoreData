@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 import PoliteCoreData_Framework
+import Shakuro_CommonTypes
 
 internal class ExampleCoreDataViewController: UIViewController {
 

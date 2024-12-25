@@ -12,17 +12,17 @@
 		174192512886B86400161123 /* ManagedEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924A2886B86400161123 /* ManagedEntity.swift */; };
 		174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924B2886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift */; };
 		174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924C2886B86400161123 /* NSManagedObject+Update.swift */; };
-		174192542886B86400161123 /* SingleObjectFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */; };
-		174192552886B86400161123 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924E2886B86400161123 /* FetchedResultsController.swift */; };
 		174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924F2886B86400161123 /* PoliteCoreStorage.swift */; };
 		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
-		2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
-		2693C42D2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */; };
-		2693C42F2AC446C200ED7107 /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */; };
 		269712C0299C7D7400756DA4 /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712BF299C7D7400756DA4 /* LazyList.swift */; };
-		269712C4299CE19C00756DA4 /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */; };
 		6B0A49AD312717359427E433 /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
+		A5749F2B2D1C6EE2006C0042 /* SingleObjectFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */; };
+		A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924E2886B86400161123 /* FetchedResultsController.swift */; };
+		A5749F2D2D1C6FF1006C0042 /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */; };
+		A5749F2E2D1C701A006C0042 /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */; };
+		A5749F2F2D1C702F006C0042 /* FetchedResultsController+WrappedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */; };
+		A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -245,18 +245,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5749F2B2D1C6EE2006C0042 /* SingleObjectFetchedResultController.swift in Sources */,
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
+				A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */,
+				A5749F2F2D1C702F006C0042 /* FetchedResultsController+WrappedResult.swift in Sources */,
+				A5749F2D2D1C6FF1006C0042 /* FetchedResultsController+LazyList.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
-				2693C42F2AC446C200ED7107 /* FetchedResultsController+Section.swift in Sources */,
+				A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
-				2693C42D2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
+				A5749F2E2D1C701A006C0042 /* FetchedResultsController+Section.swift in Sources */,
 				269712C0299C7D7400756DA4 /* LazyList.swift in Sources */,
-				2497179628B8E60200028816 /* SimpleFetchedResultController.swift in Sources */,
-				174192552886B86400161123 /* FetchedResultsController.swift in Sources */,
-				174192542886B86400161123 /* SingleObjectFetchedResultController.swift in Sources */,
-				269712C4299CE19C00756DA4 /* FetchedResultsController+LazyList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

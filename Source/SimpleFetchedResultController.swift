@@ -19,15 +19,15 @@ public final class SimpleFetchedResultsController<EntityType, ResultType: Manage
 
     public init(fetchedResultsController: NSFetchedResultsController<EntityType>) {
         self.fetchedResultsController = FetchedResultsController<EntityType, ResultType>(fetchedResultsController: fetchedResultsController)
-        self.fetchedResultsController.willChangeContent = { [weak self] (_) -> Void in
+        self.fetchedResultsController.willChangeContent = { [weak self] (_) in
             guard let strongSelf = self else { return }
             strongSelf.willChange?(strongSelf)
         }
-        self.fetchedResultsController.didChangeEntity = { [weak self] (_, change) -> Void in
+        self.fetchedResultsController.didChangeEntity = { [weak self] (_, change) in
             guard let strongSelf = self else { return }
             strongSelf.combinedChanges.append(change)
         }
-        self.fetchedResultsController.didChangeContent = { [weak self] (_) -> Void in
+        self.fetchedResultsController.didChangeContent = { [weak self] (_) in
             guard let strongSelf = self else { return }
             let localCombinedChanges = strongSelf.combinedChanges
             strongSelf.combinedChanges = []

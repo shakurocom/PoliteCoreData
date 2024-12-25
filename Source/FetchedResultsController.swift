@@ -5,6 +5,7 @@
 
 import CoreData
 import Foundation
+import UIKit
 
 public enum FetchedResultsControllerChange {
     case insert(indexPath: IndexPath)

@@ -8,11 +8,10 @@ workspace 'PoliteCoreData'
 
 target 'PoliteCoreData_Framework' do
     project 'PoliteCoreData_Framework.xcodeproj'
-    pod 'Shakuro.CommonTypes', '1.1.6'
 end
 
 target 'PoliteCoreData_Example' do
     project 'PoliteCoreData_Example.xcodeproj'
-    pod 'Shakuro.CommonTypes', '1.1.6'
-    pod 'SwiftLint', '0.53.0'
+    pod 'Shakuro.CommonTypes', '1.1.8'
+    pod 'SwiftLint', '0.57.1'
 end
