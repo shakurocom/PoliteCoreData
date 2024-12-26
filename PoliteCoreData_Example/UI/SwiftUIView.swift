@@ -17,7 +17,7 @@ struct SwiftUIView: View {
         List(interactor.items) { result in
             switch result {
             case .value(let item):
-                Text(item.identifier)
+                Text(item.data.identifier)
                     .font(.system(size: 10.0, weight: .bold))
             case .empty:
                 Rectangle()

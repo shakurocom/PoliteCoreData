@@ -71,8 +71,8 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = tableView.dequeueReusableCell(indexPath: indexPath, reuseIdentifier: Constant.cellReuseIdentifier)
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
-            cell.textLabel?.text = item.identifier
-            cell.detailTextLabel?.text = "createdAt: \(item.createdAt); updatedAt: \(item.updatedAt)"
+            cell.textLabel?.text = item.data.identifier
+            cell.detailTextLabel?.text = "createdAt: \(item.data.createdAt); updatedAt: \(item.data.updatedAt)"
         }
         return cell
     }
@@ -94,7 +94,7 @@ private extension ExampleCoreDataViewController {
 
     func deleteItem(at indexPath: IndexPath) {
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
-            storage?.deleteItem(item.identifier)
+            storage?.deleteItem(item.data.identifier)
         }
     }
 

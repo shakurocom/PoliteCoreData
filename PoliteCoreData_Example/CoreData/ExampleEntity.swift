@@ -7,7 +7,7 @@ import CoreData
 import Foundation
 import PoliteCoreData_Framework
 
-class ExampleEntity {
+struct ExampleEntity: Sendable {
 
     let identifier: String
     let createdAt: Date
@@ -26,13 +26,14 @@ class ExampleEntity {
     }
 }
 
-final class ManagedExampleEntity: ExampleEntity, ManagedEntity {
+struct ManagedExampleEntity: ManagedEntity, Sendable {
 
+    let data: ExampleEntity
     let objectID: NSManagedObjectID
 
-    override init(entity: CDExampleEntity) {
-        objectID = entity.objectID
-        super.init(entity: entity)
+    init(entity: CDExampleEntity) {
+        self.data = ExampleEntity(entity: entity)
+        self.objectID = entity.objectID
     }
 }
 
@@ -49,9 +50,9 @@ extension ManagedExampleEntity: Equatable {
     static func == (lhs: ManagedExampleEntity, rhs: ManagedExampleEntity) -> Bool {
         return (
             lhs.objectID == rhs.objectID &&
-            lhs.identifier == rhs.identifier &&
-            lhs.createdAt.timeIntervalSince1970 == rhs.createdAt.timeIntervalSince1970 &&
-            lhs.updatedAt.timeIntervalSince1970 == rhs.updatedAt.timeIntervalSince1970
+            lhs.data.identifier == rhs.data.identifier &&
+            lhs.data.createdAt.timeIntervalSince1970 == rhs.data.createdAt.timeIntervalSince1970 &&
+            lhs.data.updatedAt.timeIntervalSince1970 == rhs.data.updatedAt.timeIntervalSince1970
         )
     }
 
@@ -61,9 +62,9 @@ extension ManagedExampleEntity: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(objectID)
-        hasher.combine(identifier)
-        hasher.combine(createdAt)
-        hasher.combine(updatedAt)
+        hasher.combine(data.identifier)
+        hasher.combine(data.createdAt)
+        hasher.combine(data.updatedAt)
     }
 
 }
