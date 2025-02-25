@@ -14,14 +14,10 @@
 		174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924C2886B86400161123 /* NSManagedObject+Update.swift */; };
 		174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924F2886B86400161123 /* PoliteCoreStorage.swift */; };
 		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
-		269712C0299C7D7400756DA4 /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712BF299C7D7400756DA4 /* LazyList.swift */; };
 		6B0A49AD312717359427E433 /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
 		A5749F2B2D1C6EE2006C0042 /* SingleObjectFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */; };
 		A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924E2886B86400161123 /* FetchedResultsController.swift */; };
-		A5749F2D2D1C6FF1006C0042 /* FetchedResultsController+LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */; };
-		A5749F2E2D1C701A006C0042 /* FetchedResultsController+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */; };
-		A5749F2F2D1C702F006C0042 /* FetchedResultsController+WrappedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */; };
 		A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,10 +37,6 @@
 		174192582886B9FF00161123 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = Shakuro.PoliteCoreData.podspec; sourceTree = "<group>"; };
 		2497179528B8E60200028816 /* SimpleFetchedResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFetchedResultController.swift; sourceTree = "<group>"; };
-		2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+WrappedResult.swift"; sourceTree = "<group>"; };
-		2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+Section.swift"; sourceTree = "<group>"; };
-		269712BF299C7D7400756DA4 /* LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
-		269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+LazyList.swift"; sourceTree = "<group>"; };
 		6B9CC1AD28D864E000DE744A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		732164097EC09D68C9C3018E /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
 		BB5413D26A42DB091BF1DC88 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
@@ -113,10 +105,6 @@
 		26C590CC293915D8002B611E /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				269712BF299C7D7400756DA4 /* LazyList.swift */,
-				269712C3299CE19C00756DA4 /* FetchedResultsController+LazyList.swift */,
-				2693C42C2AC4406C00ED7107 /* FetchedResultsController+WrappedResult.swift */,
-				2693C42E2AC446C200ED7107 /* FetchedResultsController+Section.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -248,15 +236,11 @@
 				A5749F2B2D1C6EE2006C0042 /* SingleObjectFetchedResultController.swift in Sources */,
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
 				A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */,
-				A5749F2F2D1C702F006C0042 /* FetchedResultsController+WrappedResult.swift in Sources */,
-				A5749F2D2D1C6FF1006C0042 /* FetchedResultsController+LazyList.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
 				A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
-				A5749F2E2D1C701A006C0042 /* FetchedResultsController+Section.swift in Sources */,
-				269712C0299C7D7400756DA4 /* LazyList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

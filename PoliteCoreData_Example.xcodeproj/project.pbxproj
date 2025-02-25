@@ -35,7 +35,7 @@
 		A541B2F62CFD70BF00D0F087 /* MigrationTestNames.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A541B2E82CFD670100D0F087 /* MigrationTestNames.xcdatamodeld */; };
 		A541B2FA2CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = A541B2F92CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel */; };
 		A541B2FC2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = A541B2FB2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel */; };
-		A57706BA2D68EDE200982EB2 /* LazyListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57706B92D68EDE200982EB2 /* LazyListDataSource.swift */; };
+		A5930E972D6D8ABA00EC693E /* LazyListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5930E962D6D8ABA00EC693E /* LazyListDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,7 +99,7 @@
 		A541B2F82CFD71EC00D0F087 /* MigrationTestNames_3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationTestNames_3.xcdatamodel; sourceTree = "<group>"; };
 		A541B2F92CFD726B00D0F087 /* MigrationTestNames_v1_to_v2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MigrationTestNames_v1_to_v2.xcmappingmodel; sourceTree = "<group>"; };
 		A541B2FB2CFD72DC00D0F087 /* MigrationTestNames_v2_to_v3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MigrationTestNames_v2_to_v3.xcmappingmodel; sourceTree = "<group>"; };
-		A57706B92D68EDE200982EB2 /* LazyListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyListDataSource.swift; sourceTree = "<group>"; };
+		A5930E962D6D8ABA00EC693E /* LazyListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyListDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,12 +203,12 @@
 		6B9CC1AC28D8645700DE744A /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				26C590D7293ACA16002B611E /* DataStorage.swift */,
+				A5930E962D6D8ABA00EC693E /* LazyListDataSource.swift */,
 				17F2268F2938C33600D604D2 /* HostingViewController.swift */,
 				17DBBB52288EB08E0076FE44 /* ExampleCoreDataViewController.swift */,
-				269712C1299CDB5400756DA4 /* ExampleCoreDataInteractor.swift */,
-				A57706B92D68EDE200982EB2 /* LazyListDataSource.swift */,
 				17F226912938C69700D604D2 /* SwiftUIView.swift */,
+				269712C1299CDB5400756DA4 /* ExampleCoreDataInteractor.swift */,
+				26C590D7293ACA16002B611E /* DataStorage.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -405,7 +405,7 @@
 				26C590D8293ACA16002B611E /* DataStorage.swift in Sources */,
 				17DBBB53288EB08E0076FE44 /* ExampleCoreDataViewController.swift in Sources */,
 				17F226902938C33600D604D2 /* HostingViewController.swift in Sources */,
-				A57706BA2D68EDE200982EB2 /* LazyListDataSource.swift in Sources */,
+				A5930E972D6D8ABA00EC693E /* LazyListDataSource.swift in Sources */,
 				17DBBB4D288EAD970076FE44 /* CDEntity+Update.swift in Sources */,
 				17DBBB4C288EAD970076FE44 /* CDExampleEntity+CoreDataClass.swift in Sources */,
 				269712C2299CDB5400756DA4 /* ExampleCoreDataInteractor.swift in Sources */,

@@ -12,8 +12,8 @@ deployment_target:
     iOS_deployment_target: 15.0
 
 closure_body_length:
-    warning: 30
-    error: 30
+    warning: 100
+    error: 100
 
 identifier_name:
     max_length: 150

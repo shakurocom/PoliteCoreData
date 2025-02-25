@@ -61,11 +61,13 @@ internal class ExampleCoreDataViewController: UIViewController {
 }
 
 extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return exampleFetchedResultController?.numberOfItemsInSection(section) ?? 0
-    }
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return exampleFetchedResultController?.numberOfSections() ?? 0
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return exampleFetchedResultController?.numberOfItemsInSection(section) ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -88,17 +90,18 @@ extension ExampleCoreDataViewController: UITableViewDelegate, UITableViewDataSou
 // MARK: - Private
 
 private extension ExampleCoreDataViewController {
-    @objc func addButtonPressed() {
+
+    @objc private func addButtonPressed() {
         storage?.insertOrDeleteItems()
     }
 
-    func deleteItem(at indexPath: IndexPath) {
+    private func deleteItem(at indexPath: IndexPath) {
         if let item = exampleFetchedResultController?.item(indexPath: indexPath) {
             storage?.deleteItem(item.data.identifier)
         }
     }
 
-    func applyChanges() {
+    private func applyChanges() {
         if view.window == nil {
             contentTableView.reloadData()
         } else {
@@ -124,4 +127,5 @@ private extension ExampleCoreDataViewController {
         }
         changes.removeAll()
     }
+
 }

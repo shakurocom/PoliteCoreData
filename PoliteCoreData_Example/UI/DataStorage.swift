@@ -24,7 +24,7 @@ extension PoliteCoreStorage: DataStorage {
         Task(operation: {
             try? await save({ (context) in
                 for index in 0..<20 {
-                    let item = ExampleEntity(identifier: "\(index)", createdAt: Date(timeIntervalSince1970: 0))
+                    let item = ExampleEntity(identifier: "\(index)", createdAt: Date())
                     let cdItem = try self.findFirstByIdOrCreate(entityType: CDExampleEntity.self, identifier: item.identifier, inContext: context)
                     _ = cdItem.update(entity: item)
                 }

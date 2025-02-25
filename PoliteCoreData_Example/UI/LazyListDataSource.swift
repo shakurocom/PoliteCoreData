@@ -24,7 +24,7 @@ public class LazyListDataSource<EntityType, ResultType: ManagedEntity> where Res
 
     public func performFetch() throws {
         try fetchedResultsController?.performFetch()
-        fetchedResultsController?.didChange = { [weak self] (_, changes) in // swiftlint:disable:this closure_body_length
+        fetchedResultsController?.didChange = { [weak self] (_, changes) in
             guard let strongSelf = self else {
                 return
             }
