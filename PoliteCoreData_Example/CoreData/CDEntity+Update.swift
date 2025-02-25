@@ -15,6 +15,7 @@ extension CDExampleEntity {
         }
         var changed: Bool = false
         changed = apply(path: \.identifier, value: entity.identifier) || changed
+        changed = apply(path: \.title, value: entity.title) || changed
         changed = apply(path: \.createdAt, value: entity.createdAt.timeIntervalSince1970) || changed
         changed = apply(path: \.updatedAt, value: entity.updatedAt.timeIntervalSince1970) || changed
 

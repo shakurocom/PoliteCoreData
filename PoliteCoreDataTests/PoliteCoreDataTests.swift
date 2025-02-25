@@ -38,7 +38,7 @@ final class PoliteCoreDataTests: XCTestCase {
     // improve core data test inside library: implement test with testing actual steps and make several moms (valid and broken) and check if migrations actually started
 
     @MainActor
-    func testMigrationNamesList () {
+    func testMigrationNamesList() async {
         let configuration = namesConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
@@ -56,7 +56,7 @@ final class PoliteCoreDataTests: XCTestCase {
                                                      customMappingModelBundle: bundle),
                 PoliteCoreStorage.MigrationOrderItem(identifier: "MigrationTestNames_3")
             ])
-            try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
+            try await storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.modelName, toVersion.modelName) {
                 case ("MigrationTestNames", "MigrationTestNames_1"):
                     self.V0_V1Success = true
@@ -68,7 +68,7 @@ final class PoliteCoreDataTests: XCTestCase {
                     XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
                 }
             }
-            try storage.setupStack(removeDBOnSetupFailed: false)
+            try await storage.setupStack(removeDBOnSetupFailed: false)
         } catch let error {
             XCTFail("Migration failed: \(error)")
         }
@@ -76,7 +76,7 @@ final class PoliteCoreDataTests: XCTestCase {
     }
 
     @MainActor
-    func testMigrationIds() {
+    func testMigrationIds() async {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
@@ -84,7 +84,7 @@ final class PoliteCoreDataTests: XCTestCase {
             let startModel = try PoliteCoreStorage.MigrationModelVersion(configuration.objectModelURL.appendingPathComponent("MigrationTestIds.mom"))
             _ = try setupTemporaryStack(managedObjectModel: startModel.model,
                                         sqliteFileURL: configuration.sqliteStoreURL)
-            try storage.migrate(
+            try await storage.migrate(
                 migrationOrder: .modelIdentifiers(items: [
                     PoliteCoreStorage.MigrationOrderItem(identifier: "version1"),
                     PoliteCoreStorage.MigrationOrderItem(identifier: "version2",
@@ -107,7 +107,7 @@ final class PoliteCoreDataTests: XCTestCase {
                         XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
                     }
                 })
-            try storage.setupStack(removeDBOnSetupFailed: false)
+            try await storage.setupStack(removeDBOnSetupFailed: false)
         } catch let error {
             XCTFail("Migration failed: \(error)")
         }
@@ -115,7 +115,7 @@ final class PoliteCoreDataTests: XCTestCase {
     }
 
     @MainActor
-    func testMigrationIdsList () {
+    func testMigrationIdsList() async {
         let configuration = idsConfig
         let storage = PoliteCoreStorage(configuration: configuration)
         do {
@@ -133,7 +133,7 @@ final class PoliteCoreDataTests: XCTestCase {
                                                      customMappingModelBundle: bundle),
                 PoliteCoreStorage.MigrationOrderItem(identifier: "version11")
             ])
-            try storage.migrate(migrationOrder: list) { fromVersion, toVersion in
+            try await storage.migrate(migrationOrder: list) { fromVersion, toVersion in
                 switch (fromVersion.versionIdentifier, toVersion.versionIdentifier) {
                 case ("version1", "version2"):
                     self.V0_V1Success = true
@@ -145,7 +145,7 @@ final class PoliteCoreDataTests: XCTestCase {
                     XCTFail("Undefined migration from \(fromVersion.modelName) to \(toVersion.modelName)")
                 }
             }
-           try storage.setupStack(removeDBOnSetupFailed: false)
+           try await storage.setupStack(removeDBOnSetupFailed: false)
         } catch let error {
             XCTFail("Migration failed: \(error)")
         }

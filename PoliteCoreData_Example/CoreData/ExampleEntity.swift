@@ -10,6 +10,7 @@ import PoliteCoreData_Framework
 struct ExampleEntity: Sendable {
 
     let identifier: String
+    var title: String
     let createdAt: Date
     let updatedAt: Date
 
@@ -17,12 +18,14 @@ struct ExampleEntity: Sendable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.identifier = identifier
+        self.title = identifier
     }
 
     init(entity: CDExampleEntity) {
         createdAt = Date(timeIntervalSince1970: entity.createdAt)
         updatedAt = Date(timeIntervalSince1970: entity.updatedAt)
         identifier = entity.identifier
+        title = entity.title
     }
 }
 
@@ -51,6 +54,7 @@ extension ManagedExampleEntity: Equatable {
         return (
             lhs.objectID == rhs.objectID &&
             lhs.data.identifier == rhs.data.identifier &&
+            lhs.data.title == rhs.data.title &&
             lhs.data.createdAt.timeIntervalSince1970 == rhs.data.createdAt.timeIntervalSince1970 &&
             lhs.data.updatedAt.timeIntervalSince1970 == rhs.data.updatedAt.timeIntervalSince1970
         )
@@ -63,6 +67,7 @@ extension ManagedExampleEntity: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(objectID)
         hasher.combine(data.identifier)
+        hasher.combine(data.title)
         hasher.combine(data.createdAt)
         hasher.combine(data.updatedAt)
     }

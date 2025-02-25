@@ -8,39 +8,32 @@ import PoliteCoreData_Framework
 @MainActor
 final class ExampleCoreDataInteractor: ObservableObject {
 
-    @Published private(set) var items: LazyList<FetchedResultsController<CDExampleEntity, ManagedExampleEntity>.WrappedResult> = .empty
-
     private let dataStorage: DataStorage
 
-    private let dataObserver: FetchedResultsController<CDExampleEntity, ManagedExampleEntity>
+    internal let lazyListDataSource: LazyListDataSource<CDExampleEntity, ManagedExampleEntity>
 
     init(dataStorage: DataStorage) {
         self.dataStorage = dataStorage
-        self.dataObserver = dataStorage.fetchableRequest()
+        self.lazyListDataSource = LazyListDataSource(fetchedResultsController: dataStorage.fetchableRequest())
     }
 
     func setup() {
-        guard !dataObserver.hasFetchedObjects else {
-            return
+        lazyListDataSource.didChange = { [weak self] in
+            self?.objectWillChange.send()
         }
-
-        dataObserver.didChangeContent = { [weak self] controller in
-            guard let self = self else {
-                return
-            }
-            self.items = controller.lazyItems()
-        }
-
-        try? dataObserver.performFetch()
-        items = dataObserver.lazyItems()
+        try? lazyListDataSource.performFetch()
     }
 
-    func deleteLastItem() {
-        dataStorage.deleteLastItem()
+    func updateItems() {
+        dataStorage.updateItems()
     }
 
-    func insertLastItem() {
-        dataStorage.insertLastItem()
+    func insertOrDeleteItems() {
+        dataStorage.insertOrDeleteItems()
+    }
+
+    func deleteItem(_ identifier: String) {
+        dataStorage.deleteItem(identifier)
     }
 
 }

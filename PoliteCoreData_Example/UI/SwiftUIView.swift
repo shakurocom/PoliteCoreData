@@ -3,7 +3,6 @@
 //
 
 import SwiftUI
-import PoliteCoreData_Framework
 
 struct SwiftUIView: View {
 
@@ -14,34 +13,44 @@ struct SwiftUIView: View {
     }
 
     var body: some View {
-        List(interactor.items) { result in
-            switch result {
-            case .value(let item):
-                Text(item.data.identifier)
-                    .font(.system(size: 10.0, weight: .bold))
-            case .empty:
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(height: 1)
-            }
+        List {
+            ForEach(interactor.lazyListDataSource.items, content: { (item) in
+                ZStack(content: {
+                    switch interactor.lazyListDataSource.dataItem(item: item) {
+                    case .some(let data):
+                        Text(data.data.identifier)
+                            .font(.system(size: 10.0, weight: .bold))
+                    case .none:
+                        Rectangle()
+                            .fill(Color.clear)
+                            .frame(height: 1)
+                    }
+                })
+            })
+            .onDelete(perform: { (indexes) in
+                if let index = indexes.first,
+                   let dataItem = interactor.lazyListDataSource.dataItem(item: interactor.lazyListDataSource.items[index]) {
+                    interactor.deleteItem(dataItem.data.identifier)
+                }
+            })
         }
-        .animation(.easeInOut, value: interactor.items)
+        .animation(.easeInOut, value: interactor.lazyListDataSource.items)
         .navigationBarHidden(false)
         .listStyle(.plain)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: deleteLastItem) {
+                Button(action: updateItems) {
                     Image(systemName: "trash")
                 }
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: insertLastItem) {
+                Button(action: insertOrDeleteItems) {
                     Image(systemName: "plus")
                 }
             }
         }
-        .onAppear {
+        .task {
             interactor.setup()
         }
     }
@@ -50,12 +59,12 @@ struct SwiftUIView: View {
 
 private extension SwiftUIView {
 
-    private func deleteLastItem() {
-        interactor.deleteLastItem()
+    private func updateItems() {
+        interactor.updateItems()
     }
 
-    private func insertLastItem() {
-        interactor.insertLastItem()
+    private func insertOrDeleteItems() {
+        interactor.insertOrDeleteItems()
     }
 
 }

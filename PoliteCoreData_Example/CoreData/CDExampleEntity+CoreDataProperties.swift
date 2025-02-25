@@ -13,6 +13,7 @@ extension CDExampleEntity {
     }
 
     @NSManaged public var identifier: String
+    @NSManaged public var title: String
     @NSManaged public var createdAt: TimeInterval
     @NSManaged public var updatedAt: TimeInterval
 
