@@ -14,9 +14,9 @@ struct SwiftUIView: View {
 
     var body: some View {
         List {
-            ForEach(interactor.lazyListDataSource.items, content: { (item) in
+            ForEach(interactor.lazyListDataSourceItems(), content: { (item) in
                 ZStack(content: {
-                    switch interactor.lazyListDataSource.dataItem(item: item) {
+                    switch interactor.dataItem(item: item) {
                     case .some(let data):
                         Text(data.data.identifier)
                             .font(.system(size: 10.0, weight: .bold))
@@ -29,12 +29,12 @@ struct SwiftUIView: View {
             })
             .onDelete(perform: { (indexes) in
                 if let index = indexes.first,
-                   let dataItem = interactor.lazyListDataSource.dataItem(item: interactor.lazyListDataSource.items[index]) {
+                   let dataItem = interactor.dataItem(index: index) {
                     interactor.deleteItem(dataItem.data.identifier)
                 }
             })
         }
-        .animation(.easeInOut, value: interactor.lazyListDataSource.items)
+        .animation(.easeInOut, value: interactor.lazyListDataSourceItems())
         .navigationBarHidden(false)
         .listStyle(.plain)
         .toolbar {

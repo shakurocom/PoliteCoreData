@@ -16,6 +16,9 @@
 		1741925B2886BF6200161123 /* Shakuro.PoliteCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1741925A2886BF6200161123 /* Shakuro.PoliteCoreData.podspec */; };
 		6B0A49AD312717359427E433 /* Pods_PoliteCoreData_Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C0AE7E2DECCBD1A7C3A7F /* Pods_PoliteCoreData_Framework.framework */; };
 		6B9CC1AE28D8652D00DE744A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 6B9CC1AD28D864E000DE744A /* .swiftlint.yml */; };
+		A5115E8E2D6E480B00935AA5 /* LazyListDatabaseDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5115E8D2D6E480B00935AA5 /* LazyListDatabaseDataSource.swift */; };
+		A5115E902D6E4D2D00935AA5 /* LazyListDataSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5115E8F2D6E4D2D00935AA5 /* LazyListDataSourceItem.swift */; };
+		A5115E922D6E4D3600935AA5 /* LazyListMemoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5115E912D6E4D3600935AA5 /* LazyListMemoryDataSource.swift */; };
 		A5749F2B2D1C6EE2006C0042 /* SingleObjectFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */; };
 		A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1741924E2886B86400161123 /* FetchedResultsController.swift */; };
 		A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2497179528B8E60200028816 /* SimpleFetchedResultController.swift */; };
@@ -39,6 +42,9 @@
 		2497179528B8E60200028816 /* SimpleFetchedResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFetchedResultController.swift; sourceTree = "<group>"; };
 		6B9CC1AD28D864E000DE744A /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		732164097EC09D68C9C3018E /* Pods-PoliteCoreData_Framework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.debug.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.debug.xcconfig"; sourceTree = "<group>"; };
+		A5115E8D2D6E480B00935AA5 /* LazyListDatabaseDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyListDatabaseDataSource.swift; sourceTree = "<group>"; };
+		A5115E8F2D6E4D2D00935AA5 /* LazyListDataSourceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyListDataSourceItem.swift; sourceTree = "<group>"; };
+		A5115E912D6E4D3600935AA5 /* LazyListMemoryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyListMemoryDataSource.swift; sourceTree = "<group>"; };
 		BB5413D26A42DB091BF1DC88 /* Pods-PoliteCoreData_Framework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoliteCoreData_Framework.release.xcconfig"; path = "Target Support Files/Pods-PoliteCoreData_Framework/Pods-PoliteCoreData_Framework.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,7 +95,6 @@
 		174192482886B86400161123 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				26C590CC293915D8002B611E /* SwiftUI */,
 				1741924A2886B86400161123 /* ManagedEntity.swift */,
 				1741924C2886B86400161123 /* NSManagedObject+Update.swift */,
 				1741924F2886B86400161123 /* PoliteCoreStorage.swift */,
@@ -98,15 +103,11 @@
 				1741924E2886B86400161123 /* FetchedResultsController.swift */,
 				1741924D2886B86400161123 /* SingleObjectFetchedResultController.swift */,
 				2497179528B8E60200028816 /* SimpleFetchedResultController.swift */,
+				A5115E8F2D6E4D2D00935AA5 /* LazyListDataSourceItem.swift */,
+				A5115E8D2D6E480B00935AA5 /* LazyListDatabaseDataSource.swift */,
+				A5115E912D6E4D3600935AA5 /* LazyListMemoryDataSource.swift */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		26C590CC293915D8002B611E /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		42735635D43DF0EF17BA21C4 /* Frameworks */ = {
@@ -237,9 +238,12 @@
 				174192562886B86400161123 /* PoliteCoreStorage.swift in Sources */,
 				A5749F2C2D1C6F76006C0042 /* FetchedResultsController.swift in Sources */,
 				174192512886B86400161123 /* ManagedEntity.swift in Sources */,
+				A5115E922D6E4D3600935AA5 /* LazyListMemoryDataSource.swift in Sources */,
 				A5749F302D1C704D006C0042 /* SimpleFetchedResultController.swift in Sources */,
+				A5115E902D6E4D2D00935AA5 /* LazyListDataSourceItem.swift in Sources */,
 				174192502886B86400161123 /* PredicateConvertible.swift in Sources */,
 				174192532886B86400161123 /* NSManagedObject+Update.swift in Sources */,
+				A5115E8E2D6E480B00935AA5 /* LazyListDatabaseDataSource.swift in Sources */,
 				174192522886B86400161123 /* PoliteCoreStorage+EntityIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,11 +10,11 @@ final class ExampleCoreDataInteractor: ObservableObject {
 
     private let dataStorage: DataStorage
 
-    internal let lazyListDataSource: LazyListDataSource<CDExampleEntity, ManagedExampleEntity>
+    private let lazyListDataSource: LazyListDatabaseDataSource<CDExampleEntity, ManagedExampleEntity>
 
     init(dataStorage: DataStorage) {
         self.dataStorage = dataStorage
-        self.lazyListDataSource = LazyListDataSource(fetchedResultsController: dataStorage.fetchableRequest())
+        self.lazyListDataSource = LazyListDatabaseDataSource(fetchedResultsController: dataStorage.fetchableRequest())
     }
 
     func setup() {
@@ -22,6 +22,21 @@ final class ExampleCoreDataInteractor: ObservableObject {
             self?.objectWillChange.send()
         }
         try? lazyListDataSource.performFetch()
+    }
+
+    internal func lazyListDataSourceItems() -> [LazyListDataSourceItem] {
+        return lazyListDataSource.items
+    }
+
+    internal func dataItem(item: LazyListDataSourceItem) -> ManagedExampleEntity? {
+        return lazyListDataSource.dataItem(item: item)
+    }
+
+    internal func dataItem(index: Int) -> ManagedExampleEntity? {
+        guard index >= 0 && index < lazyListDataSource.items.count else {
+            return nil
+        }
+        return lazyListDataSource.dataItem(item: lazyListDataSource.items[index])
     }
 
     func updateItems() {

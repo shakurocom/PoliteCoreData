@@ -3,13 +3,13 @@
 //
 
 import Foundation
-import PoliteCoreData_Framework
+import SwiftUI
 
-public class LazyListDataSource<EntityType, ResultType: ManagedEntity> where ResultType.EntityType == EntityType {
+public class LazyListDatabaseDataSource<EntityType, ResultType: ManagedEntity> where ResultType.EntityType == EntityType {
 
     public var didChange: (() -> Void)?
 
-    internal private(set) var items: [LazyListDataSourceItem] = []
+    public private(set) var items: [LazyListDataSourceItem] = []
 
     private let fetchedResultsController: SimpleFetchedResultsController<EntityType, ResultType>?
     private let logChanges: Bool = false
@@ -97,18 +97,6 @@ public class LazyListDataSource<EntityType, ResultType: ManagedEntity> where Res
 
     public func index(item: LazyListDataSourceItem) -> Int? {
         return items.firstIndex(of: item)
-    }
-
-}
-
-// MARK: - LazyListDataSourceItem
-
-public struct LazyListDataSourceItem: Identifiable, Equatable {
-
-    public let id: String
-
-    internal init() {
-        self.id = UUID().uuidString
     }
 
 }
