@@ -33,16 +33,25 @@ public final class FetchedResultsController<EntityType, ResultType: ManagedEntit
     /// Notifies about particular changes such as add, remove, move, or update.
     public var didChangeEntity: ((_ controller: FetchedResultsController<EntityType, ResultType>, _ change: FetchedResultsControllerChange) -> Void)?
 
+    public var didChangeContentWithDiffableDataSource: ((_ controller: FetchedResultsController<EntityType, ResultType>,
+                                                         _ snapshot: NSDiffableDataSourceSnapshotReference) -> Void)?
+
     /// Wrapped NSFetchedResultsController
     public let fetchedResultsController: NSFetchedResultsController<EntityType>
 
     private let delegateProxy = HiddenDelegateProxy<EntityType, ResultType>()
+    private let delegateProxyWithDiffableDataSource = HiddenDelegateProxyWithDiffableDataSource<EntityType, ResultType>()
 
-    public init(fetchedResultsController: NSFetchedResultsController<EntityType>) {
+    public init(fetchedResultsController: NSFetchedResultsController<EntityType>, shouldUseDiffableDataSource: Bool = false) {
         self.fetchedResultsController = fetchedResultsController
         super.init()
-        delegateProxy.target = self
-        fetchedResultsController.delegate = delegateProxy
+        if shouldUseDiffableDataSource {
+            delegateProxyWithDiffableDataSource.target = self
+            fetchedResultsController.delegate = delegateProxyWithDiffableDataSource
+        } else {
+            delegateProxy.target = self
+            fetchedResultsController.delegate = delegateProxy
+        }
     }
 
     /// Sets new sort descriptors. Call performFetch() to apply
@@ -241,6 +250,20 @@ private final class HiddenDelegateProxy<EntityType, ResultType: ManagedEntity>: 
             return
         }
         actualTarget.didChangeContent?(actualTarget)
+    }
+
+}
+
+private final class HiddenDelegateProxyWithDiffableDataSource<EntityType, ResultType: ManagedEntity>: NSObject, NSFetchedResultsControllerDelegate where ResultType.EntityType == EntityType {
+
+    weak var target: FetchedResultsController<EntityType, ResultType>?
+
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>,
+                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        guard let actualTarget = target else {
+            return
+        }
+        actualTarget.didChangeContentWithDiffableDataSource?(actualTarget, snapshot)
     }
 
 }
